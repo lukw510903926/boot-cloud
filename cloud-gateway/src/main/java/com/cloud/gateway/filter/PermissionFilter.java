@@ -85,6 +85,9 @@ public class PermissionFilter implements GlobalFilter, Ordered {
                 return this.writeAuthErrorMsg(exchange.getResponse(), "没有访问权限");
             } else {
                 Object loginUser = this.getLoginUser(values.get(0));
+                if(loginUser == null){
+                    return this.writeAuthErrorMsg(exchange.getResponse(),"token过期");
+                }
                 if (!this.checkPermission(loginUser)) {
                     return this.writeAuthErrorMsg(exchange.getResponse(), "没有访问权限");
                 }
