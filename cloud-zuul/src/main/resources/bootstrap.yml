@@ -1,0 +1,29 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8888/eureka/
+#      defaultZone: http://cloud:cloud@127.0.0.1:8888/eureka/
+  instance:
+    prefer-ip-address: true
+spring:
+  application:
+    name: cloud-zuul
+zuul:
+  ribbon:
+    eager-load:
+     enabled: true
+  routes:
+    consumer:
+      path: /consumer/**
+      serviceId: cloud-consumer
+      stripPrefix: false
+      sensitiveHeaders:
+      customSensitiveHeaders: true
+    product:
+      path: /product/**
+      serviceId: cloud-product
+      stripPrefix: false
+      sensitiveHeaders:
+      customSensitiveHeaders: true
+
+

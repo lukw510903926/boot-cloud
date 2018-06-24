@@ -1,0 +1,35 @@
+server:
+  port: 7654
+  servlet:
+    context-path: cloud-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8888/eureka/
+  instance:
+    prefer-ip-address: true
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      default-filters:
+      - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+      routes:
+      - id: cloud-product
+        order: 8000
+        uri: lb://cloud-product # lb loadBalanced
+        predicates:
+        - Path=/product/**
+#        filters:
+#        - StripPrefix=1 转发时去除路径中的product  去除匹配路径中的前缀长度
+      discovery:
+        locator:
+          enabled: true
+ribbon:
+  eager-load:
+    enabled: true
+
+          
+          
+          
