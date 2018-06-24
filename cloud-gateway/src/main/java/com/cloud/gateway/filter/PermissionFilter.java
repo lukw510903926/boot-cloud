@@ -2,6 +2,7 @@ package com.cloud.gateway.filter;
 
 import java.net.URI;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
@@ -31,6 +36,8 @@ public class PermissionFilter implements GlobalFilter, Ordered {
 
 	@Autowired
 	private GatewayProperties gatewayProperties;
+
+	public static  final String AUTH_HEADER = "gate_auth_header";
 
 	@Override
 	public int getOrder() {
@@ -67,6 +74,14 @@ public class PermissionFilter implements GlobalFilter, Ordered {
 			requestUrl = requestUrl.substring(requestUrl.indexOf(port) + port.length());
 			logger.info("uri : {}", uri);
 			logger.info("requestURL : {}", requestUrl);
+			HttpHeaders headers = exchange.getRequest().getHeaders();
+			List<String> values = headers.getValuesAsList(AUTH_HEADER);
+			if(CollectionUtils.isEmpty(values)){
+				ServerHttpResponse response = exchange.getResponse();
+				response.setStatusCode(HttpStatus.FORBIDDEN);
+				return null;
+			}
+
 		}
 		return chain.filter(exchange);
 	}
