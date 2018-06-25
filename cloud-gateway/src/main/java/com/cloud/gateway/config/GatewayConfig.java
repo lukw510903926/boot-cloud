@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.util.pattern.PathPatternParser;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author lukw
@@ -23,11 +25,8 @@ public class GatewayConfig {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
 
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("OPTIONS");
+        List<String> list = Arrays.asList(new String[]{"GET", "POST", "DELETE", "PUT", "OPTIONS"});
+        config.setAllowedMethods(list);
         config.setAllowCredentials(true);
         PathPatternParser patternParser = new PathPatternParser();
         patternParser.parse("/**");
