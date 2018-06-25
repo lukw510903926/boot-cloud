@@ -61,9 +61,6 @@ public class PermissionFilter implements GlobalFilter, Ordered {
         addOriginalRequestUrl(exchange, url);
         String requestUrl = url.toString();
         List<RouteDefinition> routes = gatewayProperties.getRoutes();
-        // routes [RouteDefinition{id='cloud-product',
-        // predicates=[PredicateDefinition{name='Path', args={_genkey_0=/product/**}}],
-        // filters=[], uri=lb://cloud-product, order=8000}]
         logger.info(" routes {}", routes);
         RouteDefinition route = null;
         for (RouteDefinition routeDefinition : routes) {
