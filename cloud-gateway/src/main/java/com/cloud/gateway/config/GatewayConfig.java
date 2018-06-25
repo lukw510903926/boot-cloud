@@ -28,6 +28,7 @@ public class GatewayConfig {
         List<String> list = Arrays.asList(new String[]{"GET", "POST", "DELETE", "PUT", "OPTIONS"});
         config.setAllowedMethods(list);
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
         PathPatternParser patternParser = new PathPatternParser();
         patternParser.parse("/**");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(patternParser);
