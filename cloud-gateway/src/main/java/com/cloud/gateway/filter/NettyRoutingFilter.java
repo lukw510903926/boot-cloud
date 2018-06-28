@@ -10,6 +10,8 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.s
 import java.net.URI;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -44,6 +46,8 @@ public class NettyRoutingFilter implements GlobalFilter, Ordered {
     private final HttpClient httpClient;
     
     private final ObjectProvider<List<HttpHeadersFilter>> headersFilters;
+
+    private Logger logger = LoggerFactory.getLogger(NettyRoutingFilter.class);
 
     public NettyRoutingFilter(HttpClient httpClient, ObjectProvider<List<HttpHeadersFilter>> headersFilters) {
         this.httpClient = httpClient;
@@ -97,7 +101,9 @@ public class NettyRoutingFilter implements GlobalFilter, Ordered {
             HttpHeaders headers = new HttpHeaders();
             res.responseHeaders().forEach(entry -> headers.add(entry.getKey(), entry.getValue()));
             MediaType contentType = headers.getContentType();
+            logger.info("herder contentType : {}",contentType);
             contentType = contentType == null ? MediaType.parseMediaType(MediaType.APPLICATION_JSON_VALUE) : contentType;
+            logger.info("contentType : {}",contentType);
             exchange.getAttributes().put("original_response_content_type", contentType);
 
             HttpHeaders filteredResponseHeaders = HttpHeadersFilter.filter(

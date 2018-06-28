@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.CollectionUtils;
@@ -18,11 +17,10 @@ import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 
 /**
  * @author lukew
- * @Description: 权限拦截
+ * @Description: 权限认证
  * @email 13507615840@163.com
  * @date 2018年6月23日 下午4:26:45
  */
-@Configuration
 public class PermissionFilter implements GlobalFilter, Ordered {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
