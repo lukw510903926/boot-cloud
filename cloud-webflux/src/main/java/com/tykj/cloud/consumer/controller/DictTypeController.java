@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tykj.cloud.api.api.IDictTypeFeign;
 import com.tykj.cloud.api.entity.DictType;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/type")
@@ -21,6 +22,12 @@ public class DictTypeController {
 	@GetMapping("/list")
 	public Flux<List<DictType>> list(){
 		
-		return Flux.just(this.dictTypeFeign.list());
+		return Flux.just(this.dictTypeFeign.list(),this.dictTypeFeign.list());
+	}
+
+	@GetMapping("/mono/list")
+	public Mono<List<DictType>> monoList(){
+
+		return Mono.just(this.dictTypeFeign.list());
 	}
 }
