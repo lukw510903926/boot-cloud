@@ -1,8 +1,11 @@
 package com.cloud.gateway.filter;
 
+import com.cloud.gateway.util.LoginUser;
 import com.cloud.gateway.util.ServerWebExchangeUtil;
+import com.cloud.gateway.util.TokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -23,6 +26,13 @@ public class LoginFilter implements GlobalFilter, Ordered {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private TokenManager tokenManager;
+
+	@Autowired
+    private void setTokenManager(TokenManager tokenManager){
+	    this.tokenManager = tokenManager;
+    }
+
 	@Override
 	public int getOrder() {
 		return 0;
@@ -36,16 +46,11 @@ public class LoginFilter implements GlobalFilter, Ordered {
 		if (CollectionUtils.isEmpty(values)) {
 			return ServerWebExchangeUtil.writeMsg(exchange, "401");
 		} else {
-			Object loginUser = this.getLoginUser(values.get(0));
+            LoginUser loginUser = this.tokenManager.getLoginUser(values.get(0));
 			if(loginUser == null){
 				return ServerWebExchangeUtil.writeMsg(exchange,"401");
 			}
 		}
 		return chain.filter(exchange);
-	}
-
-	private Object getLoginUser(String token) {
-
-		return token;
 	}
 }

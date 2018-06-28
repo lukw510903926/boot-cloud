@@ -2,9 +2,13 @@ package com.cloud.gateway.filter;
 
 import java.net.URI;
 import java.util.List;
+
+import com.cloud.gateway.util.LoginUser;
 import com.cloud.gateway.util.ServerWebExchangeUtil;
+import com.cloud.gateway.util.TokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
@@ -23,9 +27,16 @@ import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
  */
 public class PermissionFilter implements GlobalFilter, Ordered {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private TokenManager tokenManager;
+
+    @Autowired
+    private void setTokenManager(TokenManager tokenManager){
+        this.tokenManager = tokenManager;
+    }
 
     public static final String AUTH_HEADER = "gate_auth_header";
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public int getOrder() {
@@ -46,21 +57,18 @@ public class PermissionFilter implements GlobalFilter, Ordered {
         if (CollectionUtils.isEmpty(values)) {
             return ServerWebExchangeUtil.writeMsg(exchange, "403");
         } else {
-            Object loginUser = this.getLoginUser(values.get(0));
-            if (!this.checkPermission(loginUser)) {
+            LoginUser loginUser = this.tokenManager.getLoginUser(values.get(0));
+            if (!this.checkPermission(loginUser,requestUri)) {
                 return ServerWebExchangeUtil.writeMsg(exchange, "403");
             }
         }
         return chain.filter(exchange);
     }
 
-    private boolean checkPermission(Object loginUser) {
+    private boolean checkPermission(LoginUser loginUser,String requestUrl) {
 
-        return loginUser == null;
+        List<String> permission = loginUser.getPermission();
+        return permission.contains(requestUrl);
     }
 
-    private Object getLoginUser(String token) {
-
-        return token;
-    }
 }
