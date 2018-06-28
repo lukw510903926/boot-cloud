@@ -23,6 +23,13 @@ spring:
         - Path=/product/**
 #        filters:
 #        - StripPrefix=1 转发时去除路径中的product  去除匹配路径中的前缀长度
+      - id: cloud-webflux
+        order: 200
+        uri: lb://cloud-webflux
+        predicates:
+        - Path=/webflux/**
+        filters:
+        - StripPrefix=1
       discovery:
         locator:
           enabled: true

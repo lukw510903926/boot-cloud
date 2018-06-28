@@ -57,5 +57,6 @@
         <module>cloud-config</module>
         <module>cloud-api</module>
         <module>cloud-gateway</module>
+        <module>cloud-webflux</module>
     </modules>
 </project>
