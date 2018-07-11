@@ -42,6 +42,7 @@ public class AccessFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		try {
 			log.info("X-Auth-Token ok {}",ctx.getZuulRequestHeaders());
+			ctx.addZuulRequestHeader("CLOUD_HEADER","CLOUD_HEADER_VALUE");
 			return true;
 		} catch (Exception ex) {
 		}
