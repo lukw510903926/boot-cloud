@@ -1,6 +1,8 @@
 package com.tykj.cloud.consumer.config;
 
 import com.tykj.cloud.api.filter.HeaderFilter;
+import com.tykj.cloud.api.util.Constants;
+import feign.RequestInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +16,19 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    public FilterRegistrationBean characterEncodingFilter() {
+    public FilterRegistrationBean headerFilter() {
 
-        FilterRegistrationBean registration = new FilterRegistrationBean(new HeaderFilter());
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new HeaderFilter());
         registration.addUrlPatterns("/*");
         registration.addInitParameter("header-filter", "header-filter-value");
         registration.setName("header-filter");
         return registration;
+    }
+
+    @Bean
+    public RequestInterceptor  requestInterceptor(){
+
+        return requestTemplate -> requestTemplate.header(Constants.CLOUD_HEADER,Constants.CLOUD_FEIGN_HEADER+"_VALUE");
     }
 }
