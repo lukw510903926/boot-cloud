@@ -1,23 +1,15 @@
 package com.cloud.gateway;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.cloud.gateway.filter.headers.HttpHeadersFilter;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.cloud.gateway.filter.NettyRoutingFilter;
-
-import reactor.ipc.netty.http.client.HttpClient;
 
 @EnableEurekaClient
 @SpringBootApplication
@@ -29,13 +21,24 @@ public class GatewayApplication {
 		SpringApplication.run(GatewayApplication.class, args);
 		logger.info("gateway application start successfully---------");
 	}
-	
-	@Bean
-	@Primary
-	public NettyRoutingFilter nettyRoutingFilter(HttpClient httpClient,
-											ObjectProvider<List<HttpHeadersFilter>> headersFilters) {
-		return new NettyRoutingFilter(httpClient, headersFilters);
-	}
+//
+//	@Bean
+//	@Primary
+//	public NettyRoutingFilter nettyRoutingFilter(HttpClient httpClient,
+//												 ObjectProvider<List<HttpHeadersFilter>> headersFilters) {
+//		List<HttpHeadersFilter> list = headersFilters.getIfAvailable();
+//		HttpHeadersFilter httpHeadersFilter = new HttpHeadersFilter() {
+//			@Override
+//			public HttpHeaders filter(HttpHeaders input, ServerWebExchange exchange) {
+//				input.add("CLOUD_HEADER","GATEWAY_CLOUD_HEADER_VALUE");
+//				return input;
+//			}
+//		};
+//
+//		httpHeadersFilter.supports(HttpHeadersFilter.Type.REQUEST);
+//		list.add(httpHeadersFilter);
+//		return new NettyRoutingFilter(httpClient, headersFilters);
+//	}
 	
 	@Bean
 	public HttpMessageConverters messageConverters() {
