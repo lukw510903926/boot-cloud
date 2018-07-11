@@ -3,9 +3,8 @@ package com.tykj.cloud.zuul.route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.web.ZuulHandlerMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+//@RestController
 public class RefreshController {
 
     @Autowired
