@@ -23,7 +23,7 @@ public class ConsumerApplication {
 	public static void main(String[] args) throws Exception {
 
 		SpringApplication.run(ConsumerApplication.class, args);
-		logger.info("Producter Application start successfully------------");
+		logger.info("Consumer Application start successfully------------");
 	}
 
 	@Bean
