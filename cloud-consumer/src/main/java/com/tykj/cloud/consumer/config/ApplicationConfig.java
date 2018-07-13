@@ -6,6 +6,8 @@ import feign.RequestInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author lukw
@@ -13,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @create 2018-07-11 19:15
  **/
 @Configuration
-public class ApplicationConfig {
+public class ApplicationConfig implements WebMvcConfigurer {
 
     @Bean
     public FilterRegistrationBean headerFilter() {
@@ -24,6 +26,15 @@ public class ApplicationConfig {
         registration.addInitParameter("header-filter", "header-filter-value");
         registration.setName("header-filter");
         return registration;
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowCredentials(true)
+                .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
+                .maxAge(3600);
     }
 
     @Bean
