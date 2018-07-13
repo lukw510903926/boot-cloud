@@ -10,5 +10,12 @@ eureka:
 spring:
   application:
     name: cloud-consumer
+  cloud:
+    config: # config 配置在application文件中不会生效
+      profile: dev
+      name: cloud-consumer
+      discovery:
+        enabled: true
+        service-id: cloud-config
 #  zipkin:
 #    base-url: http://127.0.0.1:8030
