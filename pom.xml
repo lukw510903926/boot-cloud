@@ -44,6 +44,16 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.1.38</version>
             </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>2.0.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -68,6 +78,7 @@
         <module>cloud-api</module>
         <module>cloud-gateway</module>
         <module>cloud-webflux</module>
-		<module>cloud-zipkin</module>		
+		<module>cloud-zipkin</module>
+        <module>cloud-admin</module>
     </modules>
 </project>
