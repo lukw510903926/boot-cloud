@@ -1,0 +1,55 @@
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>${version}</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <!-- 默认为 TRUE, 设为 FALSE, 防止将 ${project.finalName} 作为根目录打进 WAR 包 -->
+    <!-- TRUE 结构: ${project.finalName}.war/${project.finalName}/WEB-INF -->
+    <!-- FALSE 结构: ${project.finalName}.war/WEB-INF -->
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <!-- 将scope为runtime的依赖包打包到lib目录下。 -->
+        <dependencySet>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <outputDirectory>lib</outputDirectory>
+            <!-- 当前项目构件是否包含在这个依赖集合里 -->
+            <!-- true 被项目jar放入lib下 false 不放入 默认true -->
+            <useProjectArtifact>true</useProjectArtifact>
+        </dependencySet>
+    </dependencySets>
+    <fileSets>
+        <!-- class 文件打包处理 -->
+        <!-- <fileSet> <directory>target/classes</directory> <outputDirectory>sso</outputDirectory>
+            <excludes> <exclude>*.sh</exclude> <exclude>*.xml</exclude> <exclude>*.properties</exclude>
+            </excludes> </fileSet> -->
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+            <!--将项目中src/main/resources下的内容放入packaeg的第一级conf 目录中 -->
+            <includes>
+                <include>*.sh</include>
+                <include>*.xml</include>
+                <include>*.yml</include>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/logs</directory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <outputDirectory>logs</outputDirectory>
+            <excludes>
+                <exclude>*.log</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+    <!-- <files> <file> <source>src/main/resources/application.properties</source>
+        <outputDirectory>conf/</outputDirectory> <filtered>true</filtered> </file>
+        <file> <source>src/main/resources/logbak.xml</source> <outputDirectory>conf/</outputDirectory>
+        <filtered>true</filtered> </file> <file> <source>src/main/resources/startup.sh</source>
+        <outputDirectory>conf/</outputDirectory> <filtered>true</filtered> </file>
+        </files> -->
+</assembly>

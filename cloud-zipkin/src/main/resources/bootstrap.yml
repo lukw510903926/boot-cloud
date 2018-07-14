@@ -1,0 +1,12 @@
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8888/eureka/
+  instance:
+    prefer-ip-address: true
+spring:
+  application:
+    name: cloud-zipkin
+server:
+  port: 8030
