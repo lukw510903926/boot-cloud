@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.tykj.cloud.api.entity.DictType;
 
-@FeignClient("${cloud.api.prodcut.serviceId}")
+@FeignClient("${cloud.api.product.serviceId}")
 public interface IDictTypeFeign {
 
 	Logger logger = LoggerFactory.getLogger(IDictTypeFeign.class);

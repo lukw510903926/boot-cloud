@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.tykj.cloud.api.entity.DictValue;
 
-@FeignClient("${cloud.api.prodcut.serviceId}")
+@FeignClient("${cloud.api.product.serviceId}")
 public interface IDictValueFeign {
 
 	@GetMapping("/dict/value/list")
