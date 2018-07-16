@@ -27,10 +27,6 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.tykj.cloud</groupId>
 			<artifactId>cloud-common</artifactId>
 			<version>1.0</version>
