@@ -117,5 +117,6 @@
 		<module>cloud-zipkin</module>
         <module>cloud-admin</module>
         <module>cloud-common</module>
+        <module>cloud-security</module>
     </modules>
 </project>
