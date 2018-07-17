@@ -9,7 +9,6 @@ import com.tykj.cloud.common.mapper.IService;
 import com.tykj.cloud.common.util.ReflectionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import tk.mybatis.mapper.common.Mapper;
@@ -45,24 +44,22 @@ public class BaseServiceImpl<T> implements IService<T> {
 		return mapper.selectByPrimaryKey(key);
 	}
 
-	@Transactional
+	@Override
 	public int save(T entity) {
 		return mapper.insert(entity);
 	}
 
-	@Transactional
+	@Override
 	public int deleteById(String key) {
 		return mapper.deleteByPrimaryKey(key);
 	}
 	
 	@Override
-	@Transactional
 	public int delete(T t) {
 		return mapper.delete(t);
 	}
 
 	@Override
-	@Transactional
 	public void deleteByIds(List<String> list) {
 
 		if (CollectionUtils.isNotEmpty(list)) {
@@ -72,16 +69,17 @@ public class BaseServiceImpl<T> implements IService<T> {
 		}
 	}
 
-	@Transactional
+	@Override
 	public int updateAll(T entity) {
 		return mapper.updateByPrimaryKey(entity);
 	}
 
-	@Transactional
+	@Override
 	public int updateNotNull(T entity) {
 		return mapper.updateByPrimaryKeySelective(entity);
 	}
 
+	@Override
 	public List<T> selectByExample(Example example) {
 		return mapper.selectByExample(example);
 	}
