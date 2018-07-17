@@ -16,125 +16,123 @@ import tk.mybatis.mapper.entity.Example;
 
 public class BaseServiceImpl<T> implements IService<T> {
 
-	private Class<?> entityClass;
+    private Class<?> entityClass;
 
-	private List<Field> fields;
+    private List<Field> fields;
 
-	public BaseServiceImpl() {
-		entityClass = ReflectionUtils.getClassGenricType(this.getClass());
-		fields = ReflectionUtils.getFields(entityClass);
-	}
+    public BaseServiceImpl() {
+        entityClass = ReflectionUtils.getClassGenricType(this.getClass());
+        fields = ReflectionUtils.getFields(entityClass);
+    }
 
-	@Autowired
-	protected Mapper<T> mapper;
+    @Autowired
+    protected Mapper<T> mapper;
 
-	public Mapper<T> getMapper() {
-		return mapper;
-	}
-	
-	@Override
-	public List<T> selectAll(){
-		
-		return this.mapper.selectAll();
-	}
+    public Mapper<T> getMapper() {
+        return mapper;
+    }
 
-	@Override
-	public T selectByKey(Object key) {
-		
-		return mapper.selectByPrimaryKey(key);
-	}
+    @Override
+    public List<T> selectAll() {
 
-	@Override
-	public int save(T entity) {
-		return mapper.insert(entity);
-	}
+        return this.mapper.selectAll();
+    }
 
-	@Override
-	public int deleteById(String key) {
-		return mapper.deleteByPrimaryKey(key);
-	}
-	
-	@Override
-	public int delete(T t) {
-		return mapper.delete(t);
-	}
+    @Override
+    public T selectByKey(Object key) {
 
-	@Override
-	public void deleteByIds(List<String> list) {
+        return mapper.selectByPrimaryKey(key);
+    }
 
-		if (CollectionUtils.isNotEmpty(list)) {
-			for (String key : list) {
-				this.mapper.deleteByPrimaryKey(key);
-			}
-		}
-	}
+    @Override
+    public int save(T entity) {
+        return mapper.insert(entity);
+    }
 
-	@Override
-	public int updateAll(T entity) {
-		return mapper.updateByPrimaryKey(entity);
-	}
+    @Override
+    public int deleteById(String key) {
+        return mapper.deleteByPrimaryKey(key);
+    }
 
-	@Override
-	public int updateNotNull(T entity) {
-		return mapper.updateByPrimaryKeySelective(entity);
-	}
+    @Override
+    public int delete(T t) {
+        return mapper.delete(t);
+    }
 
-	@Override
-	public List<T> selectByExample(Example example) {
-		return mapper.selectByExample(example);
-	}
+    @Override
+    public void deleteByIds(List<String> list) {
 
-	@Override
-	public List<T> findByModel(T t, boolean isLike) {
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (String key : list) {
+                this.mapper.deleteByPrimaryKey(key);
+            }
+        }
+    }
 
-		Example example = this.getExample(t, isLike);
-		return this.selectByExample(example);
-	}
+    @Override
+    public int updateAll(T entity) {
+        return mapper.updateByPrimaryKey(entity);
+    }
 
-	@Override
-	public PageInfo<T> findByModel(PageInfo<T> page, T t, boolean isLike) {
+    @Override
+    public int updateNotNull(T entity) {
+        return mapper.updateByPrimaryKeySelective(entity);
+    }
 
-		Example example = this.getExample(t, isLike);
-		if (page != null) {
-			PageHelper.startPage(page.getPageNum(), page.getPageSize());
-			example.orderBy("id").desc();
-		}
-		return new PageInfo<T>(this.selectByExample(example));
-	}
+    @Override
+    public List<T> selectByExample(Example example) {
+        return mapper.selectByExample(example);
+    }
 
-	private Example getExample(T t, boolean isLike) {
-		
-		Example example = new Example(entityClass);
-		Example.Criteria criteria = example.createCriteria();
-		for (Field field : fields) {
-			String property = field.getName();
-			Class<?> type = field.getType();
-			Object value = ReflectionUtils.getter(t, property);
-			if (value != null) {
-				if (type == String.class && isLike) {
-					criteria.andLike(property, "%" + value + "%");
-				} else {
-					criteria.andEqualTo(property, value);
-				}
-			}
-		}
-		return example;
-	}
+    @Override
+    public List<T> findByModel(T t, boolean isLike) {
 
-	@Override
-	public boolean check(Serializable uid, List<T> list) {
+        Example example = this.getExample(t, isLike);
+        return this.selectByExample(example);
+    }
 
-		if (CollectionUtils.isEmpty(list)) {
-			return true;
-		} else {
-			int size = list.size();
-			if (size > 1) {
-				return false;
-			} else {
-				T t = list.get(0);
-				String oid = ReflectionUtils.getter(t, "id") + "";
-				return oid.equals(uid);
-			}
-		}
-	}
+    @Override
+    public PageInfo<T> findByModel(PageInfo<T> page, T t, boolean isLike) {
+
+        Example example = this.getExample(t, isLike);
+        if (page != null) {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            example.orderBy("id").desc();
+        }
+        return new PageInfo<T>(this.selectByExample(example));
+    }
+
+    private Example getExample(T t, boolean isLike) {
+
+        Example example = new Example(entityClass);
+        Example.Criteria criteria = example.createCriteria();
+        for (Field field : fields) {
+            String property = field.getName();
+            Class<?> type = field.getType();
+            Object value = ReflectionUtils.getter(t, property);
+            if (value != null) {
+                if (type == String.class && isLike) {
+                    criteria.andLike(property, "%" + value + "%");
+                } else {
+                    criteria.andEqualTo(property, value);
+                }
+            }
+        }
+        return example;
+    }
+
+    @Override
+    public boolean check(Serializable uid, List<T> list) {
+
+        if (CollectionUtils.isEmpty(list)) {
+            return true;
+        }
+        int size = list.size();
+        if (size > 1) {
+            return false;
+        }
+        T t = list.get(0);
+        String oid = ReflectionUtils.getter(t, "id") + "";
+        return oid.equals(uid);
+    }
 }
