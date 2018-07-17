@@ -1,7 +1,6 @@
 package com.tykj.cloud.security.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tykj.cloud.api.filter.HeaderFilter;
 import com.tykj.cloud.common.web.LoginUser;
 import com.tykj.cloud.common.web.RestResult;
 import com.tykj.cloud.security.entity.SystemUser;
@@ -26,7 +25,7 @@ public class AuthenticationFilter implements Filter {
 
     private LoginFeign loginFeign;
 
-    private Logger logger = LoggerFactory.getLogger(HeaderFilter.class);
+    private Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     @Autowired
     public void setLoginFeign(LoginFeign loginFeign) {
