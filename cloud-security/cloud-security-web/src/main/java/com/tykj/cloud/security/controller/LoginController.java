@@ -1,10 +1,14 @@
 package com.tykj.cloud.security.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tykj.cloud.common.web.RestResult;
 import com.tykj.cloud.security.autoconfigure.SsoClientProperties;
 import com.tykj.cloud.security.entity.SystemUser;
 import com.tykj.cloud.security.feign.LoginFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tykj.cloud.common.web.LoginUser;
@@ -22,14 +26,24 @@ public class LoginController implements LoginFeign {
 	private SsoClientProperties ssoClientProperties;
 
 	@Override
-	public RestResult<LoginUser> login(SystemUser systemUser) {
+	public RestResult<LoginUser> login(@RequestBody SystemUser systemUser) {
+		LoginUser loginUser =  new LoginUser();
+		loginUser.setName(systemUser.getName());
+		loginUser.setId(systemUser.getId());
+		logger.info("login : {}",JSONObject.toJSONString(loginUser));
 		return RestResult.success(new LoginUser());
 	}
 
 	@Override
-	public RestResult<LoginUser> token(String clientId, String clientKey, String token) {
+	@GetMapping("/{clientId}/{clientKey}/{token}")
+	public RestResult<LoginUser> token(@PathVariable("clientId") String clientId, @PathVariable("clientKey") String clientKey,
+									   @PathVariable("token") String token) {
 
 		logger.info("ssoClientProperties: {}",ssoClientProperties);
-		return RestResult.success(new LoginUser());
+		LoginUser loginUser =  new LoginUser();
+		loginUser.setToken(token);
+		loginUser.setId(clientKey);
+		loginUser.setName(clientId);
+		return RestResult.success(loginUser);
 	}
 }
