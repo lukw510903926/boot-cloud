@@ -1,5 +1,8 @@
 package com.tykj.cloud.consumer.config;
 
+import com.tykj.cloud.security.autoconfigure.SsoClientProperties;
+import com.tykj.cloud.security.util.Constants;
+import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +21,9 @@ public class ApplicationConfig {
     @Autowired
     private ServerProperties serverProperties;
 
+    @Autowired
+    private SsoClientProperties ssoClientProperties;
+
     @Bean
     public WebFilter contextPathWebFilter() {
         String contextPath = serverProperties.getServlet().getContextPath();
@@ -31,5 +37,15 @@ public class ApplicationConfig {
             }
             return chain.filter(exchange);
         };
+    }
+
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+
+        return requestTemplate -> requestTemplate.header("CLOUD_HEADER",  "CLOUD_FEIGN_HEADER_VALUE")
+                .header(Constants.CLOUD_CLIENT_ID, ssoClientProperties.getClientId())
+                .header(Constants.CLOUD_CLIENT_KEY, ssoClientProperties.getClientKey())
+                .header(Constants.CLOUD_CLIENT_TOKEN, Constants.CLOUD_CLIENT_TOKEN);
+
     }
 }
