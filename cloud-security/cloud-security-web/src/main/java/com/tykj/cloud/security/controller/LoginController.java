@@ -1,8 +1,10 @@
 package com.tykj.cloud.security.controller;
 
 import com.tykj.cloud.common.web.RestResult;
+import com.tykj.cloud.security.autoconfigure.SsoClientProperties;
 import com.tykj.cloud.security.entity.SystemUser;
 import com.tykj.cloud.security.feign.LoginFeign;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tykj.cloud.common.web.LoginUser;
@@ -16,6 +18,9 @@ import com.tykj.cloud.common.web.LoginUser;
 @RestController("/login")
 public class LoginController implements LoginFeign {
 
+	@Autowired
+	private SsoClientProperties ssoClientProperties;
+
 	@Override
 	public RestResult<LoginUser> login(SystemUser systemUser) {
 		return RestResult.success(new LoginUser());
@@ -23,6 +28,8 @@ public class LoginController implements LoginFeign {
 
 	@Override
 	public RestResult<LoginUser> token(String clientId, String clientKey, String token) {
+
+		logger.info("ssoClientProperties: {}",ssoClientProperties);
 		return RestResult.success(new LoginUser());
 	}
 }
