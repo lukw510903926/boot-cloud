@@ -6,10 +6,7 @@ import com.tykj.cloud.security.autoconfigure.SsoClientProperties;
 import com.tykj.cloud.security.entity.SystemUser;
 import com.tykj.cloud.security.feign.LoginFeign;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tykj.cloud.common.web.LoginUser;
 
@@ -19,7 +16,8 @@ import com.tykj.cloud.common.web.LoginUser;
  * @email 13507615840@163.com
  * @date 2018年7月16日 下午8:20:33
  */
-@RestController("/login")
+@RestController
+@RequestMapping("/login")
 public class LoginController implements LoginFeign {
 
 	@Autowired
