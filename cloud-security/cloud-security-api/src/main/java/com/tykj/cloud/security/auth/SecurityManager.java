@@ -1,4 +1,4 @@
-package com.tykj.cloud.security;
+package com.tykj.cloud.security.auth;
 
 
 import com.tykj.cloud.common.web.LoginUser;

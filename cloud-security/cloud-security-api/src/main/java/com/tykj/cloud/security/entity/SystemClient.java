@@ -1,10 +1,9 @@
-package com.tykj.cloud.entity;
-
-import java.io.Serializable;
+package com.tykj.cloud.security.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * 接入认证的客户端

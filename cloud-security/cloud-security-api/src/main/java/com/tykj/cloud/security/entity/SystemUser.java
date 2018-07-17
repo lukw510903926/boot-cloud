@@ -1,4 +1,4 @@
-package com.tykj.cloud.entity;
+package com.tykj.cloud.security.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
