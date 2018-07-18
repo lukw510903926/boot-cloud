@@ -12,4 +12,7 @@ public class Constants {
     public final static String CLOUD_HEADER = "CLOUD_HEADER";
 
     public final static String CLOUD_FEIGN_HEADER = "CLOUD_FEIGN_HEADER";
+
+
+    public final static String CLOUD_RESPONSE_HEADER = "cloud_response_header";
 }

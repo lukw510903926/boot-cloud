@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import static com.tykj.cloud.api.util.Constants.CLOUD_RESPONSE_HEADER;
 
 /**
  * 请求头拦截
@@ -24,11 +26,13 @@ public class HeaderFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         logger.info("header name : {}",request.getHeaderNames());
         logger.info("cloud-header : {}", request.getHeader(Constants.CLOUD_HEADER));
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        response.addHeader(CLOUD_RESPONSE_HEADER,CLOUD_RESPONSE_HEADER+"_value");
         chain.doFilter(request,response);
     }
 
