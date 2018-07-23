@@ -2,11 +2,8 @@ package com.tykj.cloud.common.reids;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 import redis.clients.jedis.exceptions.JedisException;
-
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 /**
