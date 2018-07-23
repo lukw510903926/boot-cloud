@@ -1,8 +1,8 @@
 package com.tykj.cloud.common.reids;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisException;
+
 import java.util.Collections;
 import java.util.UUID;
 
@@ -26,14 +26,11 @@ public class RedisLock {
 
     private String prefix = "lock:";
 
-    private final JedisPool jedisPool;
-
     private final Jedis jedis;
 
-    public RedisLock(JedisPool jedisPool) {
+    public RedisLock(Jedis jedis) {
 
-        this.jedisPool = jedisPool;
-        this.jedis = jedisPool.getResource();
+        this.jedis = jedis;
     }
 
     /**
@@ -83,7 +80,7 @@ public class RedisLock {
      * 尝试获取分布式锁
      *
      * @param lockKey    锁
-     * @param identify  请求标识
+     * @param identify   请求标识
      * @param expireTime 超期时间
      * @return 是否获取成功
      * @link https://www.cnblogs.com/linjiqin/p/8003838.html
@@ -100,7 +97,7 @@ public class RedisLock {
     /**
      * 释放分布式锁
      *
-     * @param lockKey   锁
+     * @param lockKey  锁
      * @param identify 请求标识
      * @return 是否释放成功
      * @link https://www.cnblogs.com/linjiqin/p/8003838.html
@@ -115,9 +112,9 @@ public class RedisLock {
         return RELEASE_SUCCESS.equals(result);
     }
 
-    private void close(Jedis jedis){
+    private void close(Jedis jedis) {
 
-        if(jedis != null){
+        if (jedis != null) {
             jedis.close();
         }
     }
