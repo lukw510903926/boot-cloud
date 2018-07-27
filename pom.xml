@@ -123,5 +123,6 @@
         <module>cloud-admin</module>
         <module>cloud-common</module>
         <module>cloud-security</module>
+        <module>cloud-rabbitmq</module>
     </modules>
 </project>
