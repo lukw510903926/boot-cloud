@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * TODO 2.0 自定义实现配置刷新 ? 1.x endpoint实现
+ * TODO 2.0 自定义实现配置刷新 ? 1.x endpoint实现 url -- /bus/refresh
  *
  * @author lukw
  * @email 13507615840@163.com
