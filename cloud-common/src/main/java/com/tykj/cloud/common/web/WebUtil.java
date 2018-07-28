@@ -3,7 +3,6 @@ package com.tykj.cloud.common.web;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.WebUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -19,27 +18,18 @@ import java.util.regex.Pattern;
  */
 public class WebUtil extends WebUtils {
 
-    private final static ThreadLocal<LoginUser> localUser = new ThreadLocal<>();
-
     public final static String LOGIN_USER = "_SESSION_LOGIN_USER";
 
     public final static String SSO_TOKEN_COOKIE = "_SSO_TOKEN_COOKIE";
 
-    public static LoginUser getLoginUser(HttpServletRequest request, HttpServletResponse response) {
+    public static LoginUser getLoginUser(HttpServletRequest request) {
 
-        LoginUser loginUser = (LoginUser) request.getSession().getAttribute(LOGIN_USER);
-        localUser.set(loginUser);
-        return loginUser;
+        return (LoginUser) request.getSession().getAttribute(LOGIN_USER);
     }
 
     public static LoginUser getLoginUser() {
 
-        if (localUser.get() == null) {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            LoginUser loginUser = (LoginUser) request.getSession().getAttribute(LOGIN_USER);
-            localUser.set(loginUser);
-        }
-        return localUser.get();
+        return getLoginUser(getRequest());
     }
 
     /**
@@ -62,19 +52,12 @@ public class WebUtil extends WebUtils {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
 
-    public static LoginUser getLoginUser(HttpServletRequest request) {
-        LoginUser loginUser = (LoginUser) request.getSession().getAttribute(LOGIN_USER);
-        localUser.set(loginUser);
-        return loginUser;
-    }
-
     public static String getLoginUserId() {
 
         return Optional.ofNullable(getLoginUser()).map(loginUser -> loginUser.getId()).orElse(null);
     }
 
     public static void setSessionUser(HttpServletRequest request, LoginUser loginUser) {
-        localUser.set(loginUser);
         request.getSession().setAttribute(LOGIN_USER, loginUser);
     }
 
