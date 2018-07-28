@@ -1,4 +1,4 @@
-package com.tykj.cloud.common.reids;
+package com.tykj.cloud.common.reidis;
 
 import java.util.List;
 import java.util.Map;

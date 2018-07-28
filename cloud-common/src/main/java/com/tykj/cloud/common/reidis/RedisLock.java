@@ -1,4 +1,4 @@
-package com.tykj.cloud.common.reids;
+package com.tykj.cloud.common.reidis;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
