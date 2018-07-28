@@ -15,20 +15,21 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5Util {
 
-    public static String Md5(String convertStr){
+    private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+
+    public static String Md5(String convertStr) {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).");
         }
 
         try {
             byte[] bytes = digest.digest(convertStr.toString().getBytes("UTF-8"));
             return String.format("%032x", new BigInteger(1, bytes));
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("UTF-8 encoding not available.  Fatal (should be in the JDK).");
         }
     }
@@ -66,8 +67,6 @@ public class MD5Util {
         return hexDigits[d1] + hexDigits[d2];
     }
 
-    private static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
     public static void main(String[] args) {
         System.out.println(Md5("123456"));
     }

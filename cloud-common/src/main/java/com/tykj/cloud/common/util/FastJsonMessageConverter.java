@@ -1,12 +1,12 @@
 package com.tykj.cloud.common.util;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.http.MediaType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +92,7 @@ public class FastJsonMessageConverter {
 	private static FastJsonConfig createFastJsonConfig(SerializerFeature[] features) {
 
 		FastJsonConfig fastJsonConfig = new FastJsonConfig();
-		if (features == null || features.length == 0) {
+		if (ArrayUtils.isEmpty(features)) {
 			fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
 		} else {
 			fastJsonConfig.setSerializerFeatures(features);
