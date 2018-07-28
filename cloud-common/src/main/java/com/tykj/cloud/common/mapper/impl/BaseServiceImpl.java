@@ -39,7 +39,7 @@ public class BaseServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public T selectByKey(Object key) {
+    public T selectByKey(String key) {
 
         return mapper.selectByPrimaryKey(key);
     }

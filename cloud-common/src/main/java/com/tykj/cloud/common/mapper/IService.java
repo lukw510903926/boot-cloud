@@ -38,7 +38,7 @@ import tk.mybatis.mapper.entity.Example;
  */
 public interface IService<T> {
 
-    T selectByKey(Object key);
+    T selectByKey(String key);
 
     int save(T entity);
 
