@@ -17,37 +17,37 @@ public class RedisSecurityManager implements SecurityManager {
     @Autowired
     private RedisService redisService;
 
-    private Long expireTime;
+    private long expireTime;
 
     @Override
-    public void setExpireTime(Long expireTime) {
+    public void setExpireTime(long expireTime) {
 
-        expireTime = expireTime == null ? DEFAULT_EXPIRE_TIME : expireTime;
+        expireTime = expireTime > 0 ? expireTime : DEFAULT_EXPIRE_TIME;
         this.expireTime = expireTime;
     }
 
     @Override
     public LoginUser readToken(String token) {
 
-        LoginUser loginUser = (LoginUser) redisService.get(token);
-        this.redisService.expire(token, expireTime);
+        LoginUser loginUser = (LoginUser) redisService.get(PREFIX + token);
+        this.redisService.expire(PREFIX + token, expireTime);
         return loginUser;
     }
 
     @Override
     public String saveToken(LoginUser loginUser) {
 
-        String key = PREFIX + UUID.randomUUID().toString().replaceAll("-", "");
-        loginUser.setToken(key);
-        this.redisService.set(key, loginUser, expireTime);
-        return key;
+        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        loginUser.setToken(token);
+        this.redisService.set(PREFIX + token, loginUser, expireTime);
+        return token;
     }
 
     @Override
     public boolean delete(String token) {
 
         try {
-            redisService.del(token);
+            redisService.del(PREFIX + token);
             return true;
         } catch (Exception e) {
             return false;
@@ -57,7 +57,7 @@ public class RedisSecurityManager implements SecurityManager {
     @Override
     public LoginUser updateToken(String token, LoginUser loginUser) {
 
-        redisService.set(token, loginUser, expireTime);
+        redisService.set(PREFIX + token, loginUser, expireTime);
         return loginUser;
     }
 }
