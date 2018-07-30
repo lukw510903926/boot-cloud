@@ -14,10 +14,14 @@ import java.util.UUID;
  */
 public class RedisSecurityManager implements SecurityManager {
 
-    @Autowired
+    private long expireTime;
+
     private RedisService redisService;
 
-    private long expireTime;
+    @Autowired
+    public void setRedisService(RedisService redisService) {
+        this.redisService = redisService;
+    }
 
     @Override
     public void setExpireTime(long expireTime) {
