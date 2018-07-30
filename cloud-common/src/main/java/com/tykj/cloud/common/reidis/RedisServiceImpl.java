@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 /**
@@ -80,6 +81,19 @@ public class RedisServiceImpl implements RedisService {
 
         if (keys != null && keys.size() > 0) {
             redisTemplate.delete(keys);
+        }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param key
+     */
+    @Override
+    public void del(String key) {
+
+        if (StringUtils.isNotBlank(key)) {
+            redisTemplate.delete(key);
         }
     }
 

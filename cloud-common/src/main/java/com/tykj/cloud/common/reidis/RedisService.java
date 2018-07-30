@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author lukew
+ */
 public interface RedisService {
+
     boolean expire(String key, long time);
 
     long getExpire(String key);
@@ -12,6 +16,8 @@ public interface RedisService {
     boolean hasKey(String key);
 
     void del(List<String> keys);
+
+    void del(String key);
 
     Object get(String key);
 
