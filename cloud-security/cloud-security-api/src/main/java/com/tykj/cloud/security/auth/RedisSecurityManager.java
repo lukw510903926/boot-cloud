@@ -7,46 +7,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 
 /**
- * @Description:
  * @author lukew
+ * @Description:
  * @email 13507615840@163.com
  * @date 2018年7月16日 下午9:30:47
  */
 public class RedisSecurityManager implements SecurityManager {
 
-	@Autowired
-	private RedisService redisService;
+    @Autowired
+    private RedisService redisService;
 
-	@Override
-	public LoginUser readToken(String token) {
-		
-		return (LoginUser) redisService.hget(LOGIN_USER, token);
-	}
+    private Long expire;
 
-	@Override
-	public String saveToken(LoginUser loginUser) {
+    @Override
+    public void setExpireTime(Long time) {
+        this.expire = time;
+    }
 
-		String hashKey = UUID.randomUUID().toString().replaceAll("-", "");
-		loginUser.setToken(hashKey);
-		redisService.hset(LOGIN_USER, hashKey, loginUser);
-		return hashKey;
-	}
+    @Override
+    public LoginUser readToken(String token) {
 
-	@Override
-	public boolean delete(String token) {
+        LoginUser loginUser = (LoginUser)redisService.get(token);
+        this.redisService.expire(token,expire);
+        return loginUser;
+    }
 
-		try {
-			redisService.hdel(LOGIN_USER, token);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+    @Override
+    public String saveToken(LoginUser loginUser) {
 
-	@Override
-	public LoginUser updateToken(String token, LoginUser loginUser) {
-		
-		redisService.hset(LOGIN_USER, token, loginUser);
-		return loginUser;
-	}
+        String key = PREFIX + UUID.randomUUID().toString().replaceAll("-", "");
+        loginUser.setToken(key);
+        this.redisService.set(key,loginUser,expire);
+        return key;
+    }
+
+    @Override
+    public boolean delete(String token) {
+
+        try {
+            redisService.del(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public LoginUser updateToken(String token, LoginUser loginUser) {
+
+        redisService.set(token,loginUser,expire);
+        return loginUser;
+    }
 }

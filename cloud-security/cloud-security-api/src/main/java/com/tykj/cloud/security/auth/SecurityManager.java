@@ -11,7 +11,15 @@ import com.tykj.cloud.common.web.LoginUser;
  */
 public interface SecurityManager {
 
-	final String LOGIN_USER = "LOGIN_USER";
+	final Long DEFAULT_EXPIRE_TIME = 1800L;
+
+	final String PREFIX = "cloud:security:";
+
+	/**
+	 * token 过期时间
+	 * @param time
+	 */
+	void setExpireTime(Long time);
 
 	/**
 	 * 根据token 获取登录信息
