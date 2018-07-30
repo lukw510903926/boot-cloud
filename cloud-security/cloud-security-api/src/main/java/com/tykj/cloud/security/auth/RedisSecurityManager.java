@@ -14,6 +14,9 @@ import java.util.UUID;
  */
 public class RedisSecurityManager implements SecurityManager {
 
+    /**
+     * token 过期时间
+     */
     private long expireTime;
 
     private RedisService redisService;
