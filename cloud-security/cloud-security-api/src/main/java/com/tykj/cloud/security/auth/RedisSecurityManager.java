@@ -1,6 +1,6 @@
 package com.tykj.cloud.security.auth;
 
-import com.tykj.cloud.common.reids.RedisService;
+import com.tykj.cloud.common.reidis.RedisService;
 import com.tykj.cloud.common.web.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,8 +16,6 @@ public class RedisSecurityManager implements SecurityManager {
 
 	@Autowired
 	private RedisService redisService;
-
-	private final String LOGIN_USER = "LOGIN_USER";
 
 	@Override
 	public LoginUser readToken(String token) {

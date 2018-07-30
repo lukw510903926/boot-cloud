@@ -11,6 +11,8 @@ import com.tykj.cloud.common.web.LoginUser;
  */
 public interface SecurityManager {
 
+	final String LOGIN_USER = "LOGIN_USER";
+
 	/**
 	 * 根据token 获取登录信息
 	 * 
