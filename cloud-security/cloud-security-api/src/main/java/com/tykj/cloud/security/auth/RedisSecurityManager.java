@@ -21,14 +21,16 @@ public class RedisSecurityManager implements SecurityManager {
 
     @Override
     public void setExpireTime(Long time) {
+
+        time = time == null ? DEFAULT_EXPIRE_TIME : time;
         this.expire = time;
     }
 
     @Override
     public LoginUser readToken(String token) {
 
-        LoginUser loginUser = (LoginUser)redisService.get(token);
-        this.redisService.expire(token,expire);
+        LoginUser loginUser = (LoginUser) redisService.get(token);
+        this.redisService.expire(token, expire);
         return loginUser;
     }
 
@@ -37,7 +39,7 @@ public class RedisSecurityManager implements SecurityManager {
 
         String key = PREFIX + UUID.randomUUID().toString().replaceAll("-", "");
         loginUser.setToken(key);
-        this.redisService.set(key,loginUser,expire);
+        this.redisService.set(key, loginUser, expire);
         return key;
     }
 
@@ -55,7 +57,7 @@ public class RedisSecurityManager implements SecurityManager {
     @Override
     public LoginUser updateToken(String token, LoginUser loginUser) {
 
-        redisService.set(token,loginUser,expire);
+        redisService.set(token, loginUser, expire);
         return loginUser;
     }
 }
