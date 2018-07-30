@@ -16,10 +16,10 @@ public interface SecurityManager {
 	final String PREFIX = "cloud:security:";
 
 	/**
-	 * token 过期时间
-	 * @param time
+	 * token 过期时间 单位s
+	 * @param expireTime
 	 */
-	void setExpireTime(Long time);
+	void setExpireTime(Long expireTime);
 
 	/**
 	 * 根据token 获取登录信息
