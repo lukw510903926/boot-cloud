@@ -11,6 +11,8 @@ eureka:
 spring:
   application:
     name: cloud-gateway
+  redis:
+    host: 127.0.0.1
   cloud:
     gateway:
       default-filters:
@@ -21,8 +23,8 @@ spring:
         uri: lb://cloud-product # lb loadBalanced
         predicates:
         - Path=/product/**
-#        filters:
-#        - StripPrefix=1 转发时去除路径中的product  去除匹配路径中的前缀长度
+      #        filters:
+      #        - StripPrefix=1 转发时去除路径中的product  去除匹配路径中的前缀长度
       - id: cloud-webflux
         order: 200
         uri: lb://cloud-webflux
@@ -30,6 +32,11 @@ spring:
         - Path=/webflux/**
         filters:
         - StripPrefix=1
+        - name: RequestRateLimiter # 限流filter 名称
+          args:
+            redis-rate-limiter.replenishRate: 10 # 允许用户每秒请求的个数
+            redis-rate-limiter.burstCapacity: 20 # 令牌桶的容量 允许每秒最大请求书
+            key-resolver: "#{@ipKeyResolver}"    # 使用spel 按名称引用bean 限流key的生成规则
       discovery:
         locator:
           enabled: true
