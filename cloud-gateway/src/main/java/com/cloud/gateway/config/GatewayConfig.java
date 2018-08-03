@@ -1,11 +1,14 @@
 package com.cloud.gateway.config;
 
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.util.pattern.PathPatternParser;
+import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,5 +35,14 @@ public class GatewayConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(patternParser);
         source.registerCorsConfiguration("/**", config);
         return new CorsWebFilter(source);
+    }
+
+    /**
+     * 限流key的生成
+     * @return
+     */
+    @Bean
+    public KeyResolver ipKeyResolver() {
+        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
     }
 }
