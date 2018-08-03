@@ -1,15 +1,9 @@
 package com.cloud.gateway.filter;
 
 import static org.springframework.cloud.gateway.filter.headers.HttpHeadersFilter.filterRequest;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.CLIENT_RESPONSE_ATTR;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.PRESERVE_HOST_HEADER_ATTRIBUTE;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.isAlreadyRouted;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.setAlreadyRouted;
-
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 import java.net.URI;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -44,7 +38,7 @@ import reactor.ipc.netty.http.client.HttpClientRequest;
 public class NettyRoutingFilter implements GlobalFilter, Ordered {
 
     private final HttpClient httpClient;
-    
+
     private final ObjectProvider<List<HttpHeadersFilter>> headersFilters;
 
     private Logger logger = LoggerFactory.getLogger(NettyRoutingFilter.class);
@@ -104,7 +98,7 @@ public class NettyRoutingFilter implements GlobalFilter, Ordered {
             logger.info("herder contentType : {}",contentType);
             contentType = contentType == null ? MediaType.parseMediaType(MediaType.APPLICATION_JSON_VALUE) : contentType;
             logger.info("contentType : {}",contentType);
-            exchange.getAttributes().put("original_response_content_type", contentType);
+            exchange.getAttributes().put(ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR, contentType);
 
             HttpHeaders filteredResponseHeaders = HttpHeadersFilter.filter(
                     this.headersFilters.getIfAvailable(), headers, exchange, Type.RESPONSE);
