@@ -1,7 +1,7 @@
 package com.tykj.cloud.security.auth;
 
 import com.tykj.cloud.common.reidis.RedisService;
-import com.tykj.cloud.common.web.LoginUser;
+import com.tykj.cloud.security.util.web.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
