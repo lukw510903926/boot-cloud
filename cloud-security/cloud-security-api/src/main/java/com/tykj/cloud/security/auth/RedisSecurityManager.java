@@ -1,10 +1,12 @@
 package com.tykj.cloud.security.auth;
 
-import com.tykj.cloud.common.reidis.RedisService;
 import com.tykj.cloud.security.util.web.LoginUser;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lukew
@@ -19,11 +21,11 @@ public class RedisSecurityManager implements SecurityManager {
      */
     private long expireTime;
 
-    private RedisService redisService;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    public void setRedisService(RedisService redisService) {
-        this.redisService = redisService;
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -36,8 +38,10 @@ public class RedisSecurityManager implements SecurityManager {
     @Override
     public LoginUser readToken(String token) {
 
-        LoginUser loginUser = (LoginUser) redisService.get(PREFIX + token);
-        this.redisService.expire(PREFIX + token, expireTime);
+        LoginUser loginUser = (LoginUser) (StringUtils.isBlank(token) ? null : redisTemplate.opsForValue().get(PREFIX + token));
+        if (loginUser != null) {
+            this.expire(token, expireTime);
+        }
         return loginUser;
     }
 
@@ -46,25 +50,29 @@ public class RedisSecurityManager implements SecurityManager {
 
         String token = UUID.randomUUID().toString().replaceAll("-", "");
         loginUser.setToken(token);
-        this.redisService.set(PREFIX + token, loginUser, expireTime);
+        this.redisTemplate.opsForValue().set(PREFIX + token, loginUser);
+        this.expire(token, expireTime);
         return token;
     }
 
     @Override
-    public boolean delete(String token) {
+    public void delete(String token) {
 
-        try {
-            redisService.del(PREFIX + token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        redisTemplate.delete(PREFIX + token);
     }
 
     @Override
     public LoginUser updateToken(String token, LoginUser loginUser) {
 
-        redisService.set(PREFIX + token, loginUser, expireTime);
+        this.redisTemplate.opsForValue().set(PREFIX + token, loginUser);
+        this.expire(token, expireTime);
         return loginUser;
+    }
+
+    @Override
+    public void expire(String key, long time) {
+        if (time > 0) {
+            redisTemplate.expire(key, time, TimeUnit.SECONDS);
+        }
     }
 }

@@ -43,7 +43,7 @@ public interface SecurityManager {
 	 * @param token
 	 * @return
 	 */
-	boolean delete(String token);
+	void delete(String token);
 
 	/**
 	 * 更新登录信息
@@ -53,4 +53,6 @@ public interface SecurityManager {
 	 * @return
 	 */
 	LoginUser updateToken(String token, LoginUser loginUser);
+
+	void expire(String key, long time);
 }
