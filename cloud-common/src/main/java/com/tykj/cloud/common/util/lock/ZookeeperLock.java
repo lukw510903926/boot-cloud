@@ -146,7 +146,8 @@ public class ZookeeperLock implements Watcher {
     public void releaseLock(){
 
         try {
-            this.zooKeeper.delete(currentLock,-1);
+            Stat stat = zooKeeper.exists(currentLock, false);
+            this.zooKeeper.delete(currentLock,stat.getVersion());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (KeeperException e) {
