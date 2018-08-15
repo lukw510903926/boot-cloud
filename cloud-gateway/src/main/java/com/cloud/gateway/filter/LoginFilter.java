@@ -1,8 +1,8 @@
 package com.cloud.gateway.filter;
 
-import com.cloud.gateway.util.LoginUser;
 import com.cloud.gateway.util.ServerWebExchangeUtil;
-import com.cloud.gateway.util.TokenManager;
+import com.tykj.cloud.security.auth.SecurityManager;
+import com.tykj.cloud.security.util.web.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ public class LoginFilter implements GlobalFilter, Ordered {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private TokenManager tokenManager;
+	private SecurityManager securityManager;
 
 	@Autowired
-    private void setTokenManager(TokenManager tokenManager){
-	    this.tokenManager = tokenManager;
+    private void setSecurityManager(SecurityManager securityManager){
+	    this.securityManager = securityManager;
     }
 
 	@Override
@@ -46,7 +46,7 @@ public class LoginFilter implements GlobalFilter, Ordered {
 		if (CollectionUtils.isEmpty(values)) {
 			return ServerWebExchangeUtil.writeMsg(exchange, "401");
 		} else {
-            LoginUser loginUser = this.tokenManager.getLoginUser(values.get(0));
+            LoginUser loginUser = this.securityManager.readToken(values.get(0));
 			if(loginUser == null){
 				return ServerWebExchangeUtil.writeMsg(exchange,"401");
 			}

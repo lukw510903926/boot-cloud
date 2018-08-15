@@ -37,5 +37,10 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.tykj.cloud</groupId>
+			<artifactId>cloud-security-api</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 </project>
