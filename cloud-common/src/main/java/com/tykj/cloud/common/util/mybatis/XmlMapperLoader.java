@@ -20,8 +20,8 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,11 +32,11 @@ import java.util.concurrent.TimeUnit;
  * @gitHub : https://github.com/lukw510903926
  * @description :
  */
-public class XMLMapperLoader implements DisposableBean, InitializingBean, ApplicationContextAware {
+public class XmlMapperLoader implements DisposableBean, InitializingBean, ApplicationContextAware {
 
-    private Logger logger = LoggerFactory.getLogger(XMLMapperLoader.class);
+    private Logger logger = LoggerFactory.getLogger(XmlMapperLoader.class);
 
-    private SqlSessionFactory sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
     /**
      * *Mapper.xml 文件路径
@@ -47,28 +47,29 @@ public class XMLMapperLoader implements DisposableBean, InitializingBean, Applic
 
     private ScheduledExecutorService scheduledThreadPool;
 
+    private ApplicationContext applicationContext;
+
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;
     }
 
-    public void setSqlSession(SqlSessionFactory sqlSession) {
-        this.sqlSession = sqlSession;
+    public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        // this.context = (ConfigurableApplicationContext) applicationContext;
+        this.applicationContext = applicationContext;
     }
 
+    /**
+     * @see InitializingBean 启动后设置属性值
+     */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
 
-        try {
-            ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
-            scheduledThreadPool.scheduleAtFixedRate(new Task(new Scanner()), 5, 15, TimeUnit.SECONDS);
-        } catch (Exception e1) {
-            logger.error("mapper文件修改刷新启动异常 : {}", e1);
-        }
+        scheduledThreadPool = new ScheduledThreadPoolExecutor(1);
+        scheduledThreadPool.scheduleAtFixedRate(new Task(new Scanner()), 5, 15, TimeUnit.SECONDS);
     }
 
     class Task implements Runnable {
@@ -100,12 +101,12 @@ public class XMLMapperLoader implements DisposableBean, InitializingBean, Applic
         private String[] basePackages;
 
         public Scanner() {
-            basePackages = StringUtils.tokenizeToStringArray(XMLMapperLoader.this.basePackage,
+            basePackages = StringUtils.tokenizeToStringArray(XmlMapperLoader.this.basePackage,
                     ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
             try {
                 scan();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("mapper文件扫描失败: {}", e);
             }
         }
 
@@ -129,7 +130,7 @@ public class XMLMapperLoader implements DisposableBean, InitializingBean, Applic
          */
         public void reloadXML(List<Resource> resources) throws Exception {
 
-            Configuration configuration = sqlSession.getConfiguration();
+            Configuration configuration = sqlSessionFactory.getConfiguration();
             removeConfig(configuration);
             for (Resource resource : resources) {
                 try {
@@ -226,6 +227,10 @@ public class XMLMapperLoader implements DisposableBean, InitializingBean, Applic
         }
     }
 
+    /**
+     * @throws Exception
+     * @see DisposableBean 销毁时执行
+     */
     @Override
     public void destroy() throws Exception {
 
@@ -243,6 +248,7 @@ public class XMLMapperLoader implements DisposableBean, InitializingBean, Applic
         private static final long serialVersionUID = -4950446264854982944L;
 
         @SuppressWarnings("unchecked")
+        @Override
         public V put(String key, V value) {
             remove(key);
             if (key.contains(".")) {
