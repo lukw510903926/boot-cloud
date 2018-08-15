@@ -72,7 +72,7 @@ public class RedisSecurityManager implements SecurityManager {
     @Override
     public void expire(String key, long time) {
         if (time > 0) {
-            redisTemplate.expire(key, time, TimeUnit.SECONDS);
+            redisTemplate.expire(PREFIX + key, time, TimeUnit.SECONDS);
         }
     }
 }
