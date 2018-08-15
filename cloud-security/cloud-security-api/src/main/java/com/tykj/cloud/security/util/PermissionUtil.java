@@ -26,10 +26,10 @@ public class PermissionUtil {
     public static Permission matchPermission(String requestUrl, String method, List<Permission> permissions) {
 
         Permission permission = null;
-
         for (int i = 0; i < permissions.size(); i++) {
             permission = permissions.get(i);
-            if (permission.getUrl().matches(requestUrl) && permission.getMethodType().equalsIgnoreCase(method)) {
+            boolean match = pathMatcher.match(permission.getUrl(), requestUrl);
+            if (match && permission.getMethodType().equalsIgnoreCase(method)) {
                 break;
             }
         }
