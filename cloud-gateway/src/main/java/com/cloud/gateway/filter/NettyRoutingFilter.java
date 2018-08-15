@@ -98,7 +98,7 @@ public class NettyRoutingFilter implements GlobalFilter, Ordered {
             logger.info("herder contentType : {}",contentType);
             contentType = contentType == null ? MediaType.parseMediaType(MediaType.APPLICATION_JSON_VALUE) : contentType;
             logger.info("contentType : {}",contentType);
-            exchange.getAttributes().put(ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR, contentType);
+          //  exchange.getAttributes().put(ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR, contentType);
 
             HttpHeaders filteredResponseHeaders = HttpHeadersFilter.filter(
                     this.headersFilters.getIfAvailable(), headers, exchange, Type.RESPONSE);

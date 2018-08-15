@@ -7,6 +7,7 @@ import com.cloud.gateway.util.ServerWebExchangeUtil;
 import com.tykj.cloud.security.util.PermissionUtil;
 import com.tykj.cloud.security.util.web.LoginUser;
 import com.tykj.cloud.security.util.web.Permission;
+import com.tykj.cloud.security.util.web.SystemPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,12 @@ public class PermissionFilter implements GlobalFilter, Ordered {
 
     private boolean hasPermission(LoginUser loginUser, String requestUrl, String method) {
 
-        List<Permission> permissions = loginUser.getPermissions();
-        return PermissionUtil.matchPermission(requestUrl, method, permissions) != null;
+        SystemPermission systemPermission = securityManager.getSystemPermission();
+        Permission permission = PermissionUtil.matchPermission(requestUrl, method, systemPermission.getPermissions());
+        if (permission != null) {
+            return loginUser.getPermissions().contains(permission);
+        }
+        return true;
     }
 
 }
