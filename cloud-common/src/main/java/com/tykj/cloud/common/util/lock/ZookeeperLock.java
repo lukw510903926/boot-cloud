@@ -44,12 +44,18 @@ public class ZookeeperLock implements Watcher {
 
     private CountDownLatch countDownLatch;
 
-    private CountDownLatch latch;
+    private CountDownLatch latch = new CountDownLatch(1);
 
     private Integer sessionTimeout;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * @param serverUrl      zookeeper 服务器地址
+     * @param rootPath       根节点
+     * @param lockName       锁名称
+     * @param sessionTimeout session过期时间
+     */
     public ZookeeperLock(String serverUrl, String rootPath, String lockName, int sessionTimeout) {
 
         try {
@@ -134,6 +140,17 @@ public class ZookeeperLock implements Watcher {
             countDownLatch.countDown();
             this.preLock = null;
             this.currentLock = null;
+        }
+    }
+
+    public void releaseLock(){
+
+        try {
+            this.zooKeeper.delete(currentLock,-1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (KeeperException e) {
+            e.printStackTrace();
         }
     }
 
