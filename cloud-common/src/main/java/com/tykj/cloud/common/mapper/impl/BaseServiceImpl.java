@@ -6,14 +6,22 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import com.tykj.cloud.common.mapper.IService;
+import com.tykj.cloud.common.util.PageInfo;
 import com.tykj.cloud.common.util.ReflectionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
 
+
+/**
+ * tk.mapper 通用mapper简单封装
+ *
+ * @author lukew
+ * @eamil 13507615840@163.com
+ * @create 2018-07-23 21:11
+ **/
 public class BaseServiceImpl<T> implements IService<T> {
 
     private Class<?> entityClass;
