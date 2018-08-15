@@ -60,9 +60,9 @@ public class ZookeeperLock implements Lock, Watcher {
     private String separator = File.separator;
 
     /**
-     * 创建分布式锁,使用前请确认config配置的zookeeper服务可用
+     * 创建分布式锁,使用前请确认serverUrl配置的zookeeper服务可用
      *
-     * @param serverUrl      192.168.1.127:2181
+     * @param serverUrl      192.168.1.127:2181,192.168.1.128:2181
      * @param rootPath       根节点
      * @param lockName       lockName 竞争资源标志,lockName中不能包含单词_lock_
      * @param sessionTimeout session过期时间
