@@ -1,6 +1,7 @@
 package com.tykj.cloud.security.auth;
 
 import com.tykj.cloud.security.util.web.LoginUser;
+import com.tykj.cloud.security.util.web.SystemPermission;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,6 +34,18 @@ public class RedisSecurityManager implements SecurityManager {
 
         expireTime = expireTime > 0 ? expireTime : DEFAULT_EXPIRE_TIME;
         this.expireTime = expireTime;
+    }
+
+    @Override
+    public void setSystemPermission(SystemPermission systemPermission) {
+
+        this.redisTemplate.opsForValue().set(SYS_PREFIX,systemPermission);
+    }
+
+    @Override
+    public SystemPermission getSystemPermission(){
+
+        return (SystemPermission)this.redisTemplate.opsForValue().get(SYS_PREFIX);
     }
 
     @Override

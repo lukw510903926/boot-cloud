@@ -2,6 +2,7 @@ package com.tykj.cloud.security.auth;
 
 
 import com.tykj.cloud.security.util.web.LoginUser;
+import com.tykj.cloud.security.util.web.SystemPermission;
 
 /**
  * @Description: 认证管理器
@@ -14,6 +15,21 @@ public interface SecurityManager {
 	Long DEFAULT_EXPIRE_TIME = 1800L;
 
 	String PREFIX = "cloud:security:";
+
+	String SYS_PREFIX = "sys:cloud:security:";
+
+	/**
+	 * 保存系统资源
+	 * @param SystemPermission
+	 */
+	void setSystemPermission(SystemPermission SystemPermission);
+
+	/**
+	 * 获取系统资源
+	 * @return
+	 */
+	SystemPermission getSystemPermission();
+
 
 	/**
 	 * token 过期时间 单位s
