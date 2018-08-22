@@ -1,7 +1,10 @@
 package com.tykj.cloud.common.web;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,4 +26,20 @@ public class ResponseUtil {
 			logger.error(" response write jsonMsg error : {}", e);
 		}
 	}
+
+	public static void forbidden(HttpServletResponse response){
+
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		ResponseMsg responseMsg = new ResponseMsg(403,"非法请求");
+		writeMsg(response, JSONObject.toJSONString(responseMsg));
+	}
+
+	public static void unauthorized(HttpServletResponse response){
+
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		ResponseMsg responseMsg = new ResponseMsg(401,"认证失败");
+		writeMsg(response, JSONObject.toJSONString(responseMsg));
+	}
+
+
 }

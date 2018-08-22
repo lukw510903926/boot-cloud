@@ -31,7 +31,7 @@ public class ApplicationConfig {
         return registration;
     }
 
-    @Bean
+    /*@Bean
     public FilterRegistrationBean authenticationFilter() {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -42,5 +42,5 @@ public class ApplicationConfig {
         registration.setName("authenticationFilter");
         registration.setOrder(2);
         return registration;
-    }
+    }*/
 }

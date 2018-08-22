@@ -39,7 +39,7 @@ public interface SecurityManager {
 
 	/**
 	 * 根据token 获取登录信息
-	 * 
+	 *
 	 * @param token
 	 * @return
 	 */
@@ -47,7 +47,7 @@ public interface SecurityManager {
 
 	/**
 	 * 保存登录信息
-	 * 
+	 *
 	 * @param loginUser
 	 * @return token
 	 */
@@ -55,7 +55,7 @@ public interface SecurityManager {
 
 	/**
 	 * 删除token
-	 * 
+	 *
 	 * @param token
 	 * @return
 	 */
@@ -63,7 +63,7 @@ public interface SecurityManager {
 
 	/**
 	 * 更新登录信息
-	 * 
+	 *
 	 * @param token
 	 * @param loginUser
 	 * @return

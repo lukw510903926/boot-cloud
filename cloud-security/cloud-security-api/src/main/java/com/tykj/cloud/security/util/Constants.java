@@ -10,6 +10,11 @@ package com.tykj.cloud.security.util;
 public class Constants {
 
     /**
+     * 认证header标识
+     */
+    public final static String AUTH_HEADER = "gate_auth_header";
+
+    /**
      * 认证客户端标识
      */
     public final static String CLOUD_CLIENT_ID = "cloud_client_id";
