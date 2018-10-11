@@ -21,9 +21,9 @@ public interface SecurityManager {
     /**
      * 保存系统资源
      *
-     * @param SystemPermission
+     * @param systemPermission
      */
-    void setSystemPermission(SystemPermission SystemPermission);
+    void setSystemPermission(SystemPermission systemPermission);
 
     /**
      * 获取系统资源
