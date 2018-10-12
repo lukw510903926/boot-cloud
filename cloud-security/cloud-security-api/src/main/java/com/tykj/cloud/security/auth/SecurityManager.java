@@ -76,8 +76,8 @@ public interface SecurityManager {
     /**
      * 设定key过期 单位秒
      *
-     * @param key
+     * @param token
      * @param time
      */
-    void expire(String key, long time);
+    void expire(String token, long time);
 }

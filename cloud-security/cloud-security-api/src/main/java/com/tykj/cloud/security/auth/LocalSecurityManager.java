@@ -27,13 +27,25 @@ public class LocalSecurityManager implements SecurityManager, InitializingBean {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * 系统所有资源
+     */
     private SystemPermission systemPermission;
 
+    /**
+     * 存储登录的用户
+     */
     private Map<String, LoginUser> securityMap = new ConcurrentHashMap<>(16);
 
+    /**
+     * 存储token 过期时间
+     */
     private Map<String, Long> expireMap = new ConcurrentHashMap<>(16);
 
-    private long expire = 3600 * 1000;
+    /**
+     * 默认过期时间 30分钟
+     */
+    private long expire = 1800 * 1000;
 
     @Override
     public void setSystemPermission(SystemPermission systemPermission) {
@@ -54,8 +66,8 @@ public class LocalSecurityManager implements SecurityManager, InitializingBean {
     @Override
     public LoginUser readToken(String token) {
 
-        this.expireMap.put(token, System.currentTimeMillis() + this.expire);
-        return this.securityMap.get(token);
+        this.expireMap.put(PREFIX + token, System.currentTimeMillis() + this.expire);
+        return this.securityMap.get(PREFIX + token);
     }
 
     @Override
@@ -63,8 +75,8 @@ public class LocalSecurityManager implements SecurityManager, InitializingBean {
 
         String token = UUID.randomUUID().toString().replaceAll("-", "");
         loginUser.setToken(token);
-        this.securityMap.put(token, loginUser);
-        this.expireMap.put(token, System.currentTimeMillis() + this.expire);
+        this.securityMap.put(PREFIX + token, loginUser);
+        this.expireMap.put(PREFIX + token, System.currentTimeMillis() + this.expire);
         return token;
     }
 
@@ -72,30 +84,35 @@ public class LocalSecurityManager implements SecurityManager, InitializingBean {
     public void delete(String token) {
 
         if (StringUtils.isNotBlank(token)) {
-            this.securityMap.remove(token);
-            this.expireMap.remove(token);
+            this.securityMap.remove(PREFIX + token);
+            this.expireMap.remove(PREFIX + token);
         }
     }
 
     @Override
     public LoginUser updateToken(String token, LoginUser loginUser) {
 
-        this.expireMap.put(token, System.currentTimeMillis() + this.expire);
-        return this.securityMap.put(token, loginUser);
+        this.expireMap.put(PREFIX + token, System.currentTimeMillis() + this.expire);
+        return this.securityMap.put(PREFIX + token, loginUser);
     }
 
     @Override
-    public void expire(String key, long time) {
+    public void expire(String token, long time) {
 
-        this.expireMap.put(key, System.currentTimeMillis() + time);
+        if (time < 0) {
+            this.expireMap.remove(PREFIX + token);
+            this.securityMap.remove(PREFIX + token);
+        } else {
+            this.expireMap.put(PREFIX + token, System.currentTimeMillis() + time);
+        }
     }
 
     @Override
     public void afterPropertiesSet() {
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        // 延时 1 秒后，按 3 秒的周期执行任务
-        scheduledExecutorService.scheduleAtFixedRate(new ExpireLoginUser(), 60000, 5000, TimeUnit.MILLISECONDS);
+        // 延时 6 秒后，按 5 秒的周期执行任务
+        scheduledExecutorService.scheduleAtFixedRate(new ExpireLoginUser(), 6000, 5000, TimeUnit.MILLISECONDS);
     }
 
     class ExpireLoginUser implements Runnable {
