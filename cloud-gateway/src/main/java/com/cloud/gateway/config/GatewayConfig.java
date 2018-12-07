@@ -28,7 +28,8 @@ public class GatewayConfig {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.setMaxAge(3600L);
-        List<String> list = Arrays.asList(new String[]{"GET", "POST", "DELETE", "PUT", "OPTIONS"});
+        String[] methods = {"GET", "POST", "DELETE", "PUT", "OPTIONS"};
+        List<String> list = Arrays.asList(methods);
         config.setAllowedMethods(list);
         PathPatternParser patternParser = new PathPatternParser();
         patternParser.parse("/**");
