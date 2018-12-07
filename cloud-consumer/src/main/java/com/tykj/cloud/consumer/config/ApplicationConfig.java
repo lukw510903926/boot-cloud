@@ -20,7 +20,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean headerFilter() {
 
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+        FilterRegistrationBean<HeaderFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new HeaderFilter());
         registration.addUrlPatterns("/*");
         registration.addInitParameter("header-filter", "header-filter-value");
