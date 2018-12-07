@@ -1,7 +1,6 @@
 package com.tykj.cloud.common.web;
 
-import java.io.PrintWriter;
-import java.io.Serializable;
+import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
@@ -16,14 +15,15 @@ public class ResponseUtil {
 
 	public static void writeMsg(HttpServletResponse response, String jsonMsg) {
 
-		try {
-			PrintWriter writer = response.getWriter();
+		try (OutputStream writer = response.getOutputStream()) {
+			response.setCharacterEncoding("UTF-8");
 			response.setContentType(DEFAULT_CONTENT_TYPE);
-			writer.write(jsonMsg);
+			response.setHeader("content-type", "text/html;UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			writer.write(jsonMsg.getBytes());
 			writer.flush();
-			writer.close();
 		} catch (Exception e) {
-			logger.error(" response write jsonMsg error : {}", e);
+			logger.error(" response write msg error : {}", e);
 		}
 	}
 

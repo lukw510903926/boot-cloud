@@ -1,12 +1,9 @@
 package com.tykj.cloud.common.http;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -58,16 +55,17 @@ public class RestTemplateUtil {
     private static <T> T postRequest(String url, Map<String, Object> params, Map<String, String> header, Class<T> resultType) {
 
         HttpEntity<String> httpEntity = httpEntity(params, header);
-        ResponseEntity<T> exchange = restTemplate.exchange(url, HttpMethod.POST, httpEntity, resultType);
-        return exchange.getBody();
+        return restTemplate.postForObject(url, httpEntity, resultType);
     }
 
     private static HttpEntity<String> httpEntity(Map<String, Object> params, Map<String, String> header) {
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        if (!CollectionUtils.isEmpty(header)) {
-            header.forEach((key, value) -> httpHeaders.add(key, value));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8.toString());
+        if (MapUtils.isNotEmpty(header)) {
+            header.forEach(headers::add);
         }
-        return new HttpEntity(JSONObject.toJSONString(params), httpHeaders);
+        return new HttpEntity<>(JSONObject.toJSONString(params), headers);
     }
 }

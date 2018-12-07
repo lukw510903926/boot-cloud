@@ -64,7 +64,7 @@ public class WebClientUtil {
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("jarFile", multipartFile);
         if (MapUtils.isNotEmpty(parameter)) {
-            parameter.forEach((key, value) -> params.add(key, value));
+            parameter.forEach(params::add);
         }
         return post(uri(url, HttpMethod.POST), params, MULTIPART_FORM, resultType);
     }
@@ -88,7 +88,7 @@ public class WebClientUtil {
         return uri.retrieve().bodyToMono(resultType).blockOptional(TIME_OUT).orElse(null);
     }
 
-    public static RequestBodySpec uri(String url, HttpMethod method) {
+    private static RequestBodySpec uri(String url, HttpMethod method) {
 
         return WebClient.create().method(method).uri(url);
     }
@@ -96,7 +96,7 @@ public class WebClientUtil {
     private static void header(RequestBodySpec uri, Map<String, String> header) {
 
         if (MapUtils.isNotEmpty(header)) {
-            header.forEach((name, value) -> uri.header(name, value));
+            header.forEach(uri::header);
         }
     }
 }
