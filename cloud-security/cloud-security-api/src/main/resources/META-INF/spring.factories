@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tykj.cloud.security.autoconfigure.SsoClientProperties
+com.tykj.cloud.security.autoconfigure.SsoAutoConfiguration
