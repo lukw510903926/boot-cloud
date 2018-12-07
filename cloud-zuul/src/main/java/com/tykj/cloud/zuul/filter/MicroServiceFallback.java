@@ -1,7 +1,6 @@
 package com.tykj.cloud.zuul.filter;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
@@ -42,19 +41,19 @@ public class MicroServiceFallback implements FallbackProvider {
 		return new ClientHttpResponse() {
 
 			@Override
-			public HttpStatus getStatusCode() throws IOException {
+			public HttpStatus getStatusCode()  {
 
 				return HttpStatus.OK;
 			}
 
 			@Override
-			public int getRawStatusCode() throws IOException {
+			public int getRawStatusCode()  {
 
 				return HttpStatus.OK.value();
 			}
 
 			@Override
-			public String getStatusText() throws IOException {
+			public String getStatusText()  {
 
 				return HttpStatus.OK.toString();
 			}
@@ -65,7 +64,7 @@ public class MicroServiceFallback implements FallbackProvider {
 			}
 
 			@Override
-			public InputStream getBody() throws IOException {
+			public InputStream getBody()  {
 
 				return new ByteArrayInputStream(serviceId.getBytes());
 			}

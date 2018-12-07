@@ -12,7 +12,7 @@ import com.netflix.zuul.context.RequestContext;
 @Component
 public class ErrorFilter extends ZuulFilter {
 
-	Logger log = LoggerFactory.getLogger(ErrorFilter.class);
+	private Logger log = LoggerFactory.getLogger(ErrorFilter.class);
 
 	@Override
 	public String filterType() {
@@ -34,7 +34,7 @@ public class ErrorFilter extends ZuulFilter {
 
 		RequestContext ctx = RequestContext.getCurrentContext();
 		Throwable throwable = ctx.getThrowable();
-		System.out.println(throwable.getMessage());
+		log.error(throwable.getMessage());
 		log.error("this is a ErrorFilter : {}", throwable.getCause().getMessage());
 		ctx.set("error.status_code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		ctx.set("error.exception", "请求失败");
