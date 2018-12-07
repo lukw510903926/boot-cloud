@@ -1,7 +1,5 @@
 package com.tykj.cloud.security.autoconfigure;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.Serializable;
 
@@ -12,8 +10,6 @@ import java.io.Serializable;
  * @email 13507615840@163.com
  * @create 2018-07-17 9:39
  **/
-@Configuration
-@ConfigurationProperties(prefix = "spring.sso")
 public class SsoClientProperties implements Serializable {
 
     private static final long serialVersionUID = -1936998624919386898L;

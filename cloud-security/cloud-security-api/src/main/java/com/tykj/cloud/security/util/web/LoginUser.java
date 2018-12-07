@@ -20,7 +20,7 @@ public class LoginUser implements Serializable {
 
     private Set<String> roles = new HashSet<>(0);
 
-    private List<Permission> permissions = new LinkedList<Permission>();
+    private List<Permission> permissions = new LinkedList<>();
 
     public String getUsername() {
         return username;
