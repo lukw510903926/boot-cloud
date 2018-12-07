@@ -14,7 +14,7 @@ public class WebFluxApplication {
 
 	private static Logger logger = LoggerFactory.getLogger(WebFluxApplication.class);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		SpringApplication.run(WebFluxApplication.class, args);
 		logger.info("WebFluxApplication Application start successfully------------");
