@@ -21,7 +21,7 @@ public interface IService<T> {
 	 * @param key
 	 * @return
 	 */
-    T selectByKey(String key);
+    T selectByKey(Serializable key);
 
 	/**
 	 * 保存
@@ -35,7 +35,7 @@ public interface IService<T> {
 	 * @param key
 	 * @return
 	 */
-    int deleteById(String key);
+    int deleteById(Serializable key);
 
 	/**
 	 * 根据对象删除 delete table_name where column = value .....
@@ -69,7 +69,7 @@ public interface IService<T> {
      * 根据唯一键批量删除
      * @param list
      */
-	void deleteByIds(List<String> list);
+	void deleteByIds(List<Serializable> list);
 
 	/**
 	 * 根据条件判断相同对象是否存在

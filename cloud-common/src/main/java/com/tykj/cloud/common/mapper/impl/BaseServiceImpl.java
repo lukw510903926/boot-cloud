@@ -47,7 +47,7 @@ public class BaseServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public T selectByKey(String key) {
+    public T selectByKey(Serializable key) {
 
         return mapper.selectByPrimaryKey(key);
     }
@@ -58,7 +58,7 @@ public class BaseServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public int deleteById(String key) {
+    public int deleteById(Serializable key) {
         return mapper.deleteByPrimaryKey(key);
     }
 
@@ -68,10 +68,10 @@ public class BaseServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public void deleteByIds(List<String> list) {
+    public void deleteByIds(List<Serializable> list) {
 
         if (CollectionUtils.isNotEmpty(list)) {
-            for (String key : list) {
+            for (Serializable key : list) {
                 this.mapper.deleteByPrimaryKey(key);
             }
         }
