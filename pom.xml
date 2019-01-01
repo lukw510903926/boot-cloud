@@ -14,11 +14,12 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <project.encoding>UTF-8</project.encoding>
+        <spring.boot.admin.version>2.1.1</spring.boot.admin.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
+        <version>2.1.1.RELEASE</version>
     </parent>
     <dependencyManagement>
         <dependencies>
@@ -52,22 +53,22 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-server</artifactId>
-                <version>2.0.1</version>
+                <version>${spring.boot.admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
-                <version>2.0.1</version>
+                <version>${spring.boot.admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>tk.mybatis</groupId>
                 <artifactId>mapper-spring-boot-starter</artifactId>
-                <version>2.0.1</version>
+                <version>2.1.2</version>
             </dependency>
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>1.2.5</version>
+                <version>1.2.10</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
