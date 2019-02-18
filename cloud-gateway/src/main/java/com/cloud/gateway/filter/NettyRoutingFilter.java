@@ -30,7 +30,8 @@ import reactor.ipc.netty.http.client.HttpClientRequest;
 /**
  * 
  * @Description: 修复请求转发成功后获取结果的response的header的contentType 为空造成的空指针异常
- * 参考spring cloud org.springframework.cloud.gateway.filter.NettyRoutingFilter 117 行 
+ * 参考spring cloud
+ * @see org.springframework.cloud.gateway.filter.NettyRoutingFilter 117 行
  * @author lukew
  * @email 13507615840@163.com
  * @date 2018年6月23日 下午4:17:36
