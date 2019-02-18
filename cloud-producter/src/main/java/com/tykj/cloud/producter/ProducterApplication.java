@@ -19,7 +19,7 @@ import java.util.List;
 
 @EnableEurekaClient
 @SpringCloudApplication
-@EnableFeignClients(basePackages = "com.tykj.cloud.security.feign")
+@EnableFeignClients(basePackages = "com.tykj.cloud.api")
 public class ProducterApplication {
 
 	private static Logger logger = LoggerFactory.getLogger(ProducterApplication.class);

@@ -33,12 +33,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
 		</dependency>
-		<!-- security 认证 -->
-		<dependency>
-			<groupId>com.tykj.cloud</groupId>
-			<artifactId>cloud-security-api</artifactId>
-			<version>1.0</version>
-		</dependency>
 		<!--服务追踪 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

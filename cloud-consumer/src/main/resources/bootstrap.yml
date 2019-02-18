@@ -1,6 +1,6 @@
 server:
   servlet:
-    path: /consumer
+    context-path: /consumer
 eureka:
   client:
     service-url:
