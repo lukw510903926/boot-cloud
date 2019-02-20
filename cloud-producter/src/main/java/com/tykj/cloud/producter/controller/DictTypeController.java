@@ -14,7 +14,7 @@ public class DictTypeController implements IDictTypeFeign{
 		
 		logger.info("feign request ----------------------------");
 		DictType dictType = new DictType();
-		dictType.setName("name");
+		dictType.setName("name:8020");
 		List<DictType> list = new ArrayList<>();
 		list.add(dictType);
 		return list;

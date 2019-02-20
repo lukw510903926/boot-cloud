@@ -19,10 +19,10 @@ public class DictTypeController {
 
 	@Autowired
 	private IDictTypeFeign dictTypeFeign;
-	
+
 	@GetMapping("/list")
 	public List<DictType> list(){
-		
+
 		return this.dictTypeFeign.list();
 	}
 
