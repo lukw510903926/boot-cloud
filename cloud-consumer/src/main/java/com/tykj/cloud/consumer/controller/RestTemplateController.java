@@ -1,5 +1,6 @@
 package com.tykj.cloud.consumer.controller;
 
+import com.tykj.cloud.consumer.service.HystrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,10 @@ import java.util.List;
 public class RestTemplateController {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private HystrixService hystrixService;
 
     @GetMapping("/rest/list")
-    public List list() {
-        return this.restTemplate.getForObject("http://cloud-product/product/dict/type/list", List.class);
+    public Object list() {
+        return this.hystrixService.list();
     }
 }

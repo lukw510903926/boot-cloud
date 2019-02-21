@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.tykj.cloud.api.entity.DictType;
 
-@FeignClient("${cloud.api.product.serviceId}")
+@FeignClient(value = "${cloud.api.product.serviceId}", fallback = DictTypeFallback.class)
 public interface IDictTypeFeign {
 
-	Logger logger = LoggerFactory.getLogger(IDictTypeFeign.class);
-	
-	@GetMapping("/dict/type/list")
-	List<DictType> list();
+    Logger logger = LoggerFactory.getLogger(IDictTypeFeign.class);
+
+    @GetMapping("/dict/type/list")
+    List<DictType> list();
 }

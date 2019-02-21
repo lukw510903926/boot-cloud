@@ -103,7 +103,7 @@
     </build>
     <modules>
         <module>cloud-eureka</module>
-        <module>cloud-producter</module>
+        <module>cloud-producer</module>
         <module>cloud-consumer</module>
         <module>cloud-zuul</module>
         <module>cloud-config</module>

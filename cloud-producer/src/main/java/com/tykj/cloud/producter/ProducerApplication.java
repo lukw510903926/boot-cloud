@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.context.annotation.Bean;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -19,14 +19,14 @@ import java.util.List;
 
 @EnableEurekaClient
 @SpringCloudApplication
-@EnableFeignClients(basePackages = "com.tykj.cloud.api")
-public class ProducterApplication {
+@EnableHystrixDashboard
+public class ProducerApplication {
 
-	private static Logger logger = LoggerFactory.getLogger(ProducterApplication.class);
+	private static Logger logger = LoggerFactory.getLogger(ProducerApplication.class);
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args){
 		
-		SpringApplication.run(ProducterApplication.class, args);
+		SpringApplication.run(ProducerApplication.class, args);
 		logger.info("Producter Application start successfully------------");
 	}
 

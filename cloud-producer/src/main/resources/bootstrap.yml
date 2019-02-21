@@ -22,3 +22,8 @@ hystrix:
         isolation:
           thread: timeoutInMilliseconds:1000
           ribbon: ReadTimeout:1000 ConnectTimeout:1000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
