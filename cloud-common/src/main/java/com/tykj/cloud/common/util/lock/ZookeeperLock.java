@@ -79,11 +79,7 @@ public class ZookeeperLock implements Lock, Watcher {
             if (stat == null) {
                 zooKeeper.create(this.rootPath, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
-        } catch (IOException e) {
-            throw new LockException(e);
-        } catch (KeeperException e) {
-            throw new LockException(e);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | KeeperException | IOException e) {
             throw new LockException(e);
         }
     }
@@ -108,13 +104,10 @@ public class ZookeeperLock implements Lock, Watcher {
         try {
             if (this.tryLock()) {
                 logger.info("Thread " + Thread.currentThread().getId() + " " + currentNode + " get lock true");
-                return;
             } else {
                 waitForLock(waitNode, sessionTimeout);
             }
-        } catch (KeeperException e) {
-            throw new LockException(e);
-        } catch (InterruptedException e) {
+        } catch (KeeperException | InterruptedException e) {
             throw new LockException(e);
         }
     }
@@ -149,9 +142,7 @@ public class ZookeeperLock implements Lock, Watcher {
             String tempNode = currentNode.substring(currentNode.lastIndexOf(separator) + 1);
             //找到前一个子节点
             waitNode = lockObjNodes.get(Collections.binarySearch(lockObjNodes, tempNode) - 1);
-        } catch (KeeperException e) {
-            throw new LockException(e);
-        } catch (InterruptedException e) {
+        } catch (KeeperException | InterruptedException e) {
             throw new LockException(e);
         }
         return false;
@@ -201,15 +192,13 @@ public class ZookeeperLock implements Lock, Watcher {
             zooKeeper.delete(currentNode, -1);
             currentNode = null;
             zooKeeper.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (KeeperException e) {
+        } catch (InterruptedException | KeeperException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void lockInterruptibly() throws InterruptedException {
+    public void lockInterruptibly() {
         this.lock();
     }
 
