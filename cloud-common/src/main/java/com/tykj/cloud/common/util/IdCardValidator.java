@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
  * --18位身份证号码
  * ：第7、8、9、10位为出生年份(四位数)，第11、第12位为出生月份，第13、14位代表出生日期，第17位代表性别，奇数为男，偶数为女。
  */
-public class IdcardValidator {
+public class IdCardValidator {
 
 
     /**
@@ -38,7 +38,7 @@ public class IdcardValidator {
      */
     private static final int[] POWER = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}; // 第18位校检码
 
-    private IdcardValidator() {
+    private IdCardValidator() {
     }
 
     /**
