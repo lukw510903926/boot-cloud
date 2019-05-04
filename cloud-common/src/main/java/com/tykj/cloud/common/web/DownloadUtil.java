@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
@@ -26,9 +27,9 @@ public class DownloadUtil {
 
     protected static final Logger logger = LoggerFactory.getLogger(DownloadUtil.class);
 
-    private static final Map<String, String> application_Map = new HashMap<String, String>();
+    private static final Map<String, String> application_Map = new HashMap<>();
 
-    private static final String default_application = "application/octet-stream";
+    private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
     static {
         application_Map.put("xls", "application/vnd.ms-excel");
@@ -38,7 +39,7 @@ public class DownloadUtil {
         application_Map.put("pdf", "application/pdf");
         application_Map.put("ppt", "application/vnd.ms-powerpoint");
         application_Map.put("pptx", "application/vnd.ms-powerpoint");
-        application_Map.put("rar", "application/octet-stream");
+        application_Map.put("rar", APPLICATION_OCTET_STREAM);
         application_Map.put("zip", "application/zip");
         application_Map.put("txt", "application/txt");
 
@@ -56,24 +57,17 @@ public class DownloadUtil {
      */
     public static void downloadFile(String localPath, String showName, HttpServletResponse resp) {
 
-        // 下载时候显示的文件名
-        String downloadName;
-        FileInputStream fis = null;
-        OutputStream os = null;
-        try {
-            downloadName = URLEncoder.encode(showName, "UTF-8");
+        try (FileInputStream fis = new FileInputStream(localPath); OutputStream os = resp.getOutputStream()) {
+            // 下载时候显示的文件名
+            String downloadName = URLEncoder.encode(showName, "UTF-8");
             resp.reset();
             String suffix = StringUtils.lowerCase(showName.substring(showName.lastIndexOf('.') + 1));
-            String application = application_Map.containsKey(suffix) ? application_Map.get(suffix) : default_application;
+            String application = application_Map.getOrDefault(suffix, APPLICATION_OCTET_STREAM);
             resp.setContentType(application + "; charset=utf-8");
             resp.addHeader("Content-Disposition", "attachment; filename=" + downloadName);
-            fis = new FileInputStream(localPath);
             IOUtils.copy(fis, os);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(fis);
-            IOUtils.closeQuietly(os);
         }
     }
 
@@ -86,14 +80,14 @@ public class DownloadUtil {
      */
     public static void downloadFile(InputStream inputStream, String showName, HttpServletResponse resp) {
 
-        try {
+        try(ServletOutputStream outputStream = resp.getOutputStream()) {
             String downloadName = URLEncoder.encode(showName, "UTF-8");
             resp.reset();
             String suffix = StringUtils.lowerCase(showName.substring(showName.lastIndexOf('.') + 1));
-            String application = application_Map.containsKey(suffix) ? application_Map.get(suffix) : default_application;
+            String application = application_Map.getOrDefault(suffix, APPLICATION_OCTET_STREAM);
             resp.setContentType(application + "; charset=utf-8");
             resp.addHeader("Content-Disposition", "attachment; filename=" + downloadName);
-            IOUtils.copy(inputStream, resp.getOutputStream());
+            IOUtils.copy(inputStream, outputStream);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
