@@ -118,7 +118,7 @@ public interface RedisService {
      * @param map
      * @return
      */
-    boolean hmset(String key, Map<String, Object> map);
+    void hmset(String key, Map<String, Object> map);
 
     /**
      * 设定hash值及过期时间
@@ -128,7 +128,7 @@ public interface RedisService {
      * @param time
      * @return
      */
-    boolean hmset(String key, Map<String, Object> map, long time);
+    void hmset(String key, Map<String, Object> map, long time);
 
     /**
      * 设定hash
@@ -275,7 +275,7 @@ public interface RedisService {
      * @param value
      * @return
      */
-    boolean lSet(String key, Object value);
+    long lSet(String key, Object value);
 
     /**
      * 将list放入缓存
@@ -285,7 +285,7 @@ public interface RedisService {
      * @param time
      * @return
      */
-    boolean lSet(String key, Object value, long time);
+    long lSet(String key, Object value, long time);
 
     /**
      * 将list放入缓存
@@ -294,7 +294,7 @@ public interface RedisService {
      * @param value
      * @return
      */
-    boolean lSet(String key, List<Object> value);
+    long lSet(String key, List<Object> value);
 
     /**
      * 将list放入缓存 并设定过期时间
@@ -314,7 +314,7 @@ public interface RedisService {
      * @param value
      * @return
      */
-    boolean lUpdateIndex(String key, long index, Object value);
+    void lUpdateIndex(String key, long index, Object value);
 
     /**
      * 移除N个值为value
