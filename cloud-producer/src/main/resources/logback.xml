@@ -1,14 +1,14 @@
 <configuration scan="true" scanPeriod="60" debug="false">
 
 	<!-- 日志输出格式 -->
-	<property name="pattern" value="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%-5level]%logger{96}[%line]-%msg%n" />   
+	<property name="pattern" value="%date{yyyy-MM-dd HH:mm:ss} | %highlight(%-5level) | %boldYellow(%thread) | %boldGreen(%logger) | %msg%n"/>
 	<!-- 日志保存的最大时间 -->
 	<property name="maxHistory" value="30" /> 
 	<!-- 日志文件路径 -->  
 	<property name="logPath" value="./logs" />
 	<!-- <property name="logPath" value="./logs" />  -->
 	<!-- 日志文件名称 -->
-	<property name="appName" value="product"></property>
+	<property name="appName" value="product"/>
 	<!-- 控制台 -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<!-- encoder 默认配置为PatternLayoutEncoder -->
@@ -50,15 +50,11 @@
 			<onMismatch>DENY</onMismatch>
 		</filter>
 	</appender>
-	<!-- CAT 监控 日志记录 
-	<appender name="catAppender" class="com.tykj.manage.config.cat.log.CatLogbackAppender"></appender>
-	-->
 	<!-- root的默认level是DEBUG -->
 	<root level="INFO">
 		<!-- 与上面定义的appender 的name对应 -->
 		<appender-ref ref="errorAppender" />
 		<appender-ref ref="rollingAppender" />
 		<appender-ref ref="STDOUT" />
-		<!-- <appender-ref ref="catAppender" /> -->
 	</root>
 </configuration>
