@@ -39,13 +39,13 @@ public class RedisSecurityManager implements SecurityManager {
     @Override
     public void setSystemPermission(SystemPermission systemPermission) {
 
-        this.redisTemplate.opsForValue().set(SYS_PREFIX,systemPermission);
+        this.redisTemplate.opsForValue().set(SYS_PREFIX, systemPermission);
     }
 
     @Override
-    public SystemPermission getSystemPermission(){
+    public SystemPermission getSystemPermission() {
 
-        return (SystemPermission)this.redisTemplate.opsForValue().get(SYS_PREFIX);
+        return (SystemPermission) this.redisTemplate.opsForValue().get(SYS_PREFIX);
     }
 
     @Override

@@ -35,5 +35,5 @@ public interface LoginFeign {
      */
     @GetMapping("/{clientId}/{clientKey}/{token}")
     RestResult<LoginUser> token(@PathVariable("clientId") String clientId, @PathVariable("clientKey") String clientKey,
-                    @PathVariable("token") String token);
+                                @PathVariable("token") String token);
 }

@@ -16,10 +16,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class SecurityApplication {
 
-    private static  Logger logger = LoggerFactory.getLogger(SecurityApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(SecurityApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(SecurityApplication.class,args);
+        SpringApplication.run(SecurityApplication.class, args);
         logger.info("SecurityApplication start successfully------");
     }
 }

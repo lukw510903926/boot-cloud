@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date: 2018年10月11日 下午7:23:33
  */
 @Configuration
-@ConditionalOnProperty(prefix = "spring.sso", name = "clientId",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "spring.sso", name = "clientId", matchIfMissing = true)
 public class SsoAutoConfiguration {
 
     @Bean
