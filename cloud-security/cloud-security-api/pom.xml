@@ -27,7 +27,7 @@
 			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.tykj.cloud</groupId>
+			<groupId>com.boot.cloud</groupId>
 			<artifactId>cloud-common</artifactId>
 			<version>1.0</version>
 		</dependency>

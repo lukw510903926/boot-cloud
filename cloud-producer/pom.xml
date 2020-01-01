@@ -21,7 +21,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.tykj.cloud</groupId>
+			<groupId>com.boot.cloud</groupId>
 			<artifactId>cloud-api</artifactId>
 			<version>1.0</version>
 		</dependency>

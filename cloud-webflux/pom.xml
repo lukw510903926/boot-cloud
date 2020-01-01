@@ -21,12 +21,12 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.tykj.cloud</groupId>
+            <groupId>com.boot.cloud</groupId>
             <artifactId>cloud-api</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.tykj.cloud</groupId>
+            <groupId>com.boot.cloud</groupId>
             <artifactId>cloud-security-api</artifactId>
             <version>1.0</version>
         </dependency>
