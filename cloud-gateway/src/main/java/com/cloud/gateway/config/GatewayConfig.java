@@ -9,8 +9,11 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author lukw
@@ -40,10 +43,11 @@ public class GatewayConfig {
 
     /**
      * 限流key的生成
+     *
      * @return
      */
     @Bean
     public KeyResolver ipKeyResolver() {
-        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
+        return exchange -> Mono.just(Optional.ofNullable(exchange.getRequest().getRemoteAddress()).map(InetSocketAddress::getAddress).map(InetAddress::getHostAddress).orElse("127.0.0.1"));
     }
 }
