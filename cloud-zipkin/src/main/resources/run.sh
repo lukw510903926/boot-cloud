@@ -6,7 +6,7 @@
 JAVA_HOME=which java
 
 # 模块名
-MODEL_NAME=tykj-zipkin
+MODEL_NAME=cloud-zipkin
 
 # 模块运行需要的lib
 MODEL_LIBS=`ls ../lib/*.jar | paste -s -d":" -`
@@ -15,7 +15,7 @@ MODEL_LIBS=`ls ../lib/*.jar | paste -s -d":" -`
 MODEL_OPTS="-Duser.timezone=GMT+8 -Dspring.config.location=../conf/application.properties"
 
 # 运行类名
-MODEL_CLASS="com.tykj.zipkin.ZipkinApplication"
+MODEL_CLASS="ZipkinApplication"
 
 # 运行参数
 MODEL_VARS=""

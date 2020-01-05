@@ -6,7 +6,7 @@
 JAVA_HOME=/home/ipnet/jdk1.8.0_92
 
 # 模块名
-MODEL_NAME=tykj-eureka
+MODEL_NAME==cloud-eureka
 
 # 模块运行需要的lib
 MODEL_LIBS=`ls ../lib/*.jar | paste -s -d":" -`
@@ -15,7 +15,7 @@ MODEL_LIBS=`ls ../lib/*.jar | paste -s -d":" -`
 MODEL_OPTS="-Duser.timezone=GMT+8 -Dspring.config.location=../conf/application.properties"
 
 # 运行类名
-MODEL_CLASS="com.tykj.eureka.EurekaApplication"
+MODEL_CLASS="com.cloud.eureka.EurekaApplication"
 
 # 运行参数
 MODEL_VARS=""

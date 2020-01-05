@@ -81,7 +81,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>com.tykj.zipkin.ZipkinApplication</mainClass>
+                            <mainClass>com.cloud.zipkin.ZipkinApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
