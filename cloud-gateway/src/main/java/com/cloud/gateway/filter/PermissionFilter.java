@@ -1,26 +1,26 @@
 package com.cloud.gateway.filter;
 
-import java.net.URI;
-import java.util.List;
-
 import com.cloud.gateway.util.ServerWebExchangeUtil;
-import com.tykj.cloud.security.util.PermissionUtil;
-import com.tykj.cloud.security.util.web.LoginUser;
-import com.tykj.cloud.security.util.web.Permission;
-import com.tykj.cloud.security.util.web.SystemPermission;
+import com.cloud.security.auth.SecurityManager;
+import com.cloud.security.util.PermissionUtil;
+import com.cloud.security.util.web.LoginUser;
+import com.cloud.security.util.web.Permission;
+import com.cloud.security.util.web.SystemPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
+import org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import com.tykj.cloud.security.auth.SecurityManager;
-import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * @author lukew
@@ -37,13 +37,16 @@ public class PermissionFilter implements GlobalFilter, Ordered {
         this.securityManager = securityManager;
     }
 
+    @Autowired
+    private ReactiveLoadBalancerClientFilter reactiveLoadBalancerClientFilter;
+
     public static final String AUTH_HEADER = "gate_auth_header";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public int getOrder() {
-        return LoadBalancerClientFilter.LOAD_BALANCER_CLIENT_FILTER_ORDER - 1;
+        return reactiveLoadBalancerClientFilter.getOrder() - 1;
     }
 
     @Override
