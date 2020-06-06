@@ -31,6 +31,13 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>3.2.0</version>
@@ -115,10 +122,11 @@
         <module>cloud-api</module>
         <module>cloud-gateway</module>
         <module>cloud-webflux</module>
-		<module>cloud-zipkin</module>
+        <module>cloud-zipkin</module>
         <module>cloud-admin</module>
         <module>cloud-common</module>
         <module>cloud-security</module>
         <module>cloud-rabbitmq</module>
+        <module>cloud-alibaba</module>
     </modules>
 </project>
