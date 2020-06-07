@@ -17,6 +17,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class AlibabaProducerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AlibabaConsumerApplication.class, args);
+        SpringApplication.run(AlibabaProducerApplication.class, args);
     }
 }
