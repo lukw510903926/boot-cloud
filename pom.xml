@@ -98,6 +98,11 @@
                 <artifactId>lombok</artifactId>
                 <version>1.18.8</version>
             </dependency>
+            <dependency>
+                <groupId>com.boot.cloud</groupId>
+                <artifactId>cloud-api</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
