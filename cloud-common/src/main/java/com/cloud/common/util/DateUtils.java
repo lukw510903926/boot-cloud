@@ -3,7 +3,6 @@ package com.cloud.common.util;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -285,56 +284,5 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static long pastDays(Date date) {
         long t = new Date().getTime() - date.getTime();
         return t / (24 * 60 * 60 * 1000);
-    }
-
-    public static Date getDateStart(Date date) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            date = sdf.parse(formatDate(date, "yyyy-MM-dd") + " 00:00:00");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-
-    public static Date getDateEnd(Date date) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            date = sdf.parse(formatDate(date, "yyyy-MM-dd") + " 23:59:59");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-
-    /**
-     * Long型数字串转换为Date，返回默认的datePattern格式字符串
-     *
-     * @return Date 日期对象
-     */
-    public static final Date convertLongDigitStringToDate(String dateLongDigitString) {
-        try {
-            return new Date(Long.parseLong(dateLongDigitString));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * @param args
-     * @throws ParseException
-     */
-    public static void main(String[] args) throws ParseException {
-        // System.out.println(formatDate(parseDate("2010/3/6")));
-        // System.out.println(getDate("yyyy年MM月dd日 E"));
-        // long time = new Date().getTime()-parseDate("2012-11-19").getTime();
-        // System.out.println(time/(24*60*60*1000));
     }
 }

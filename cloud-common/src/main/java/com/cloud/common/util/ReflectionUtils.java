@@ -1,29 +1,17 @@
 package com.cloud.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import javax.persistence.Transient;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 反射工具类
@@ -32,6 +20,7 @@ import java.util.Set;
  * @time 2016年10月13日 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class,
  * 被AOP过的真实类等工具函数.
  */
+@Slf4j
 public class ReflectionUtils {
 
     private static final String SETTER_PREFIX = "set";
@@ -39,8 +28,6 @@ public class ReflectionUtils {
     private static final String GETTER_PREFIX = "get";
 
     private static final String CGLIB_CLASS_SEPARATOR = "$$";
-
-    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
     /**
      * 调用Getter方法. 支持多级，如：对象名.对象名.方法
@@ -86,7 +73,7 @@ public class ReflectionUtils {
         try {
             result = field.get(obj);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常{}", e.getMessage());
+            log.error("不可能抛出的异常{}", e.getMessage());
         }
         return result;
     }
@@ -103,7 +90,7 @@ public class ReflectionUtils {
         try {
             field.set(obj, value);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常:{}", e.getMessage());
+            log.error("不可能抛出的异常:{}", e.getMessage());
         }
     }
 
@@ -157,9 +144,7 @@ public class ReflectionUtils {
                 Field field = superClass.getDeclaredField(fieldName);
                 makeAccessible(field);
                 return field;
-            } catch (NoSuchFieldException e) {// NOSONAR
-                // Field不在当前类定义,继续向上转型
-                continue;// new add
+            } catch (NoSuchFieldException e) {
             }
         }
         return null;
@@ -181,7 +166,7 @@ public class ReflectionUtils {
                 Method method = searchType.getDeclaredMethod(methodName, parameterTypes);
                 makeAccessible(method);
                 return method;
-            } catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException ignored) {
             }
         }
         return null;
@@ -195,11 +180,8 @@ public class ReflectionUtils {
     public static Field getDeclaredField(Class<?> cls, String fileName) {
         while (!cls.equals(Object.class)) {
             try {
-                Field field = cls.getDeclaredField(fileName);
-                if (field != null) {
-                    return field;
-                }
-            } catch (Exception e) {
+                return cls.getDeclaredField(fileName);
+            } catch (Exception ignored) {
             }
             cls = cls.getSuperclass();
         }
@@ -258,7 +240,7 @@ public class ReflectionUtils {
      * determined
      */
     public static Class<?> getClassGenricType(final Class<?> clazz) {
-        return (Class<?>) getClassGenricType(clazz, 0);
+        return getClassGenricType(clazz, 0);
     }
 
     /**
@@ -275,18 +257,18 @@ public class ReflectionUtils {
 
         Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
-            logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            log.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
             return Object.class;
         }
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
 
         if (index >= params.length || index < 0) {
-            logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
+            log.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
                     + params.length);
             return Object.class;
         }
         if (!(params[index] instanceof Class)) {
-            logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            log.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
             return Object.class;
         }
         return (Class<?>) params[index];
@@ -321,17 +303,16 @@ public class ReflectionUtils {
         return new RuntimeException("Unexpected Checked Exception.", e);
     }
 
-    private static DateFormat dateformat = DateFormat.getDateInstance();
+    private static final DateFormat DATE_INSTANCE = DateFormat.getDateInstance();
 
     public static Object newInstance(String className) {
 
-        Object o = null;
         try {
             Class<?> cl = Class.forName(className);
             return newInstance(cl);
-        } catch (Exception cl) {
+        } catch (Exception ignored) {
         }
-        return o;
+        return null;
     }
 
     public static Object newInstance(Class<?> cls) {
@@ -340,7 +321,7 @@ public class ReflectionUtils {
             Constructor<?> cons = cls.getDeclaredConstructor();
             cons.setAccessible(true);
             return cons.newInstance();
-        } catch (Exception cons) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -366,89 +347,23 @@ public class ReflectionUtils {
         try {
             cons = cls.getDeclaredConstructor(argsClass);
             cons.setAccessible(true);
-        } catch (Exception localException1) {
+        } catch (Exception ignored) {
         }
         Object obj = null;
         try {
+            assert cons != null;
             obj = cons.newInstance(args);
-        } catch (Exception localException2) {
+        } catch (Exception ignored) {
         }
         return obj;
-    }
-
-    public static Object getInstance(String className) {
-        return getInstance(className, "getInstance", null, null);
-    }
-
-    public static Object getInstance(String className, Object[] args) {
-        return getInstance(className, "getInstance", objectToClass(args), args);
-    }
-
-    public static Object getInstance(String className, Class<?>[] argsClass, Object[] args) {
-        return getInstance(className, "getInstance", argsClass, args);
-    }
-
-    public static Object getInstance(String className, String methodName) {
-        return getInstance(className, methodName, null, null);
-    }
-
-    public static Object getInstance(String className, String methodName, Object[] args) {
-        return getInstance(className, methodName, objectToClass(args), args);
-    }
-
-    public static Object getInstance(String className, String methodName, Class<?>[] argsClass, Object[] args) {
-
-        Object obj = null;
-        try {
-            Class<?> cls = Class.forName(className);
-            obj = invoke(cls, methodName, argsClass, args);
-        } catch (Exception cls) {
-        }
-        return obj;
-    }
-
-    public static Object invoke(Object obj, String methodName, Object[] args) {
-        return invoke(obj, methodName, objectToClass(args), args);
-    }
-
-    public static Object invoke(Object obj, String methodName, Class<?>[] argsClass, Object[] args) {
-
-        Object returnObj = null;
-        if (obj instanceof Class) {
-            returnObj = invoke((Class<?>) obj, obj, methodName, argsClass, args);
-        } else {
-            returnObj = invoke(obj.getClass(), obj, methodName, argsClass, args);
-        }
-        return returnObj;
-    }
-
-    public static Object invoke(Class<?> cls, Object obj, String methodName, Class<?>[] argsClass, Object[] args) {
-
-        Object returnObj = null;
-        Method method = null;
-        try {
-            method = cls.getDeclaredMethod(methodName, argsClass);
-            method.setAccessible(true);
-            returnObj = method.invoke(obj, args);
-        } catch (SecurityException e) {
-            return null;
-        } catch (NoSuchMethodException e) {
-            if (!(cls.equals(Object.class))) {
-                returnObj = invoke(cls.getSuperclass(), obj, methodName, argsClass, args);
-            }
-            return null;
-        } catch (Exception e) {
-            return null;
-        }
-        return returnObj;
     }
 
     public static boolean isExistField(Class<?> cl, String fieldName) {
 
         while (!(Object.class.equals(cl))) {
             Field[] fields = cl.getDeclaredFields();
-            for (int i = 0; i < fields.length; ++i) {
-                if (fieldName.equals(fields[i].getName())) {
+            for (Field field : fields) {
+                if (fieldName.equals(field.getName())) {
                     return true;
                 }
             }
@@ -460,8 +375,8 @@ public class ReflectionUtils {
     public static boolean isExistMethod(Class<?> cl, String methodName) {
         while (!(Object.class.equals(cl))) {
             Method[] methods = cl.getDeclaredMethods();
-            for (int i = 0; i < methods.length; ++i) {
-                if (methodName.equals(methods[i].getName())) {
+            for (Method method : methods) {
+                if (methodName.equals(method.getName())) {
                     return true;
                 }
             }
@@ -473,10 +388,10 @@ public class ReflectionUtils {
     public static String getFieldValueString(Object obj) {
 
         Field[] fields = obj.getClass().getDeclaredFields();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < fields.length; ++i) {
-            String fieldName = fields[i].getName();
-            sb.append(fields[i].getName() + "=");
+        StringBuilder sb = new StringBuilder();
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            sb.append(field.getName()).append("=");
             try {
                 sb.append(getter(obj, fieldName));
             } catch (Exception e) {
@@ -503,7 +418,7 @@ public class ReflectionUtils {
         try {
             field.setAccessible(true);
             field.set(obj, args);
-        } catch (Exception localException) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -532,28 +447,26 @@ public class ReflectionUtils {
             }
             field = cls.getDeclaredField(fieldName);
             String mName = field.getName();
-            mName = "get" + mName.replaceFirst(new StringBuilder(String.valueOf(mName.charAt(0))).toString(),
-                    new StringBuilder(String.valueOf(mName.charAt(0))).toString().toUpperCase());
+            mName = "get" + mName.replaceFirst(String.valueOf(mName.charAt(0)),
+                    String.valueOf(mName.charAt(0)).toUpperCase());
             boolean isInv = false;
             try {
-                Method method = cls.getMethod(mName, new Class[]{args.getClass()});
-                method.invoke(obj, new Object[]{args});
+                Method method = cls.getMethod(mName, args.getClass());
+                method.invoke(obj, args);
                 isInv = true;
-            } catch (Exception method) {
+            } catch (Exception ignored) {
             }
             if (isInv) {
                 return;
             }
             field.setAccessible(true);
             field.set(obj, args);
-        } catch (SecurityException e) {
-            return;
         } catch (NoSuchFieldException e) {
             if (cls.equals(Object.class)) {
                 return;
             }
             setter(cls.getSuperclass(), obj, fieldName, args, argsType);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -577,7 +490,7 @@ public class ReflectionUtils {
 
     public static Object getter(Class<?> cls, Object obj, String fieldName) {
 
-        if (fieldName.indexOf(".") != -1) {
+        if (fieldName.contains(".")) {
             String fname1 = fieldName.substring(0, fieldName.indexOf("."));
             String fname2 = fieldName.substring(fieldName.indexOf(".") + 1);
             try {
@@ -594,14 +507,14 @@ public class ReflectionUtils {
         try {
             field = cls.getDeclaredField(fieldName);
             String mName = field.getName();
-            mName = "get" + mName.replaceFirst(new StringBuilder(String.valueOf(mName.charAt(0))).toString(),
-                    new StringBuilder(String.valueOf(mName.charAt(0))).toString().toUpperCase());
+            mName = "get" + mName.replaceFirst(String.valueOf(mName.charAt(0)),
+                    String.valueOf(mName.charAt(0)).toUpperCase());
             boolean isInv = false;
             try {
                 Method method = cls.getMethod(mName);
                 retObj = method.invoke(obj);
                 isInv = true;
-            } catch (Exception method) {
+            } catch (Exception ignored) {
             }
             if (!isInv) {
                 return null;
@@ -615,7 +528,7 @@ public class ReflectionUtils {
                 return null;
             }
             retObj = getter(cls.getSuperclass(), obj, fieldName);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return retObj;
     }
@@ -625,7 +538,7 @@ public class ReflectionUtils {
         try {
             field.setAccessible(true);
             return field.get(obj);
-        } catch (Exception localException) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -640,7 +553,7 @@ public class ReflectionUtils {
         }
         if ((Date.class.equals(toClass)) && (value instanceof String)) {
             try {
-                dateformat.parse((String) value);
+                DATE_INSTANCE.parse((String) value);
             } catch (Exception e) {
                 return null;
             }
@@ -667,28 +580,28 @@ public class ReflectionUtils {
         return toString(obj, "@");
     }
 
-    public static String toString(Object obj, String prot) {
+    public static String toString(Object obj, String property) {
 
         if (obj == null) {
-            return "null";
+            return "";
         }
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder builder = new StringBuilder();
         Class<?> cls = obj.getClass();
         do {
             Field[] fields = cls.getDeclaredFields();
             for (int i = 0; i < fields.length; ++i) {
                 Object vv = getter(obj, fields[i].getName());
                 if ((vv != null) && (((vv.getClass().equals(Date.class)) || (vv.getClass().getSuperclass().equals(Date.class))))) {
-                    vv = dateformat.format((Date) vv);
+                    vv = DATE_INSTANCE.format((Date) vv);
                 }
-                sb.append(fields[i].getName() + "=" + vv);
+                builder.append(fields[i].getName()).append("=").append(vv);
                 if (i != fields.length - 1) {
-                    sb.append(prot);
+                    builder.append(property);
                 }
             }
             cls = cls.getSuperclass();
         } while (!(cls.equals(Object.class)));
-        return sb.toString();
+        return builder.toString();
     }
 
     private static Class<?>[] objectToClass(Object[] args) {
@@ -712,13 +625,10 @@ public class ReflectionUtils {
         if (obj == null) {
             return "";
         }
-        String value = null;
         if (obj instanceof Date) {
-            value = dateformat.format((Date) obj);
-        } else {
-            value = obj.toString();
+            return DATE_INSTANCE.format((Date) obj);
         }
-        return value;
+        return obj.toString();
     }
 
     public static Method getMethod(Class<?> cls, String methodName) {
@@ -746,7 +656,7 @@ public class ReflectionUtils {
             return getFields(object);
         }
         Class<?> clazz = getClass(object);
-        List<Field> list = new ArrayList<Field>();
+        List<Field> list = new ArrayList<>();
         getFields(clazz, list);
         return list;
     }
@@ -754,7 +664,7 @@ public class ReflectionUtils {
     private static void getFields(Class<?> clazz, List<Field> list) {
 
         Field[] fields = clazz.getDeclaredFields();
-        if (fields != null && fields.length > 0) {
+        if (fields.length > 0) {
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Transient.class)) {
                     continue;
@@ -775,7 +685,7 @@ public class ReflectionUtils {
     public static List<Field> getFields(Object object) {
 
         Class<?> clazz = getClass(object);
-        List<Field> list = new ArrayList<Field>();
+        List<Field> list = new ArrayList<>();
         for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
             getFields(clazz, list);
         }
@@ -807,11 +717,10 @@ public class ReflectionUtils {
      */
     public static void mapToBean(Map<String, Object> map, Object object) {
 
-        String property = null;
         List<Field> list = ReflectionUtils.getFields(object.getClass(), true);
         for (Field field : list) {
             if (field.getType() != List.class && field.getType() != Set.class) {
-                property = field.getName();
+                String property = field.getName();
                 setter(object, property, map.get(property));
             }
         }
@@ -826,14 +735,10 @@ public class ReflectionUtils {
 
         try {
             return PropertyUtils.describe(object);
-        } catch (IllegalAccessException e) {
-            logger.info("转换失败 :{}", e.getLocalizedMessage());
-        } catch (InvocationTargetException e) {
-            logger.info("转换失败 :{}", e.getLocalizedMessage());
-        } catch (NoSuchMethodException e) {
-            logger.info("转换失败 :{}", e.getLocalizedMessage());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            log.info("转换失败 :{}", e.getLocalizedMessage());
         }
-        return new HashMap<String, Object>();
+        return new HashMap<>();
     }
 
     /**

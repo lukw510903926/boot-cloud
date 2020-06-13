@@ -1,8 +1,7 @@
 package com.cloud.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,12 +16,10 @@ import java.util.Properties;
  * @createTime : 2017年5月23日 : 下午4:16:13
  * @description : 属性文件解析
  */
+@Slf4j
 public class PropertiesLoader {
 
-
-    private static Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
-
-    private static ResourceLoader resourceLoader = new DefaultResourceLoader();
+    private static final ResourceLoader RESOURCE_LOADER = new DefaultResourceLoader();
 
     private final Properties properties;
 
@@ -103,7 +100,7 @@ public class PropertiesLoader {
      */
     public Double getDouble(String key, Integer defaultValue) {
         String value = getValue(key);
-        return StringUtils.isNotBlank(value) ? Double.valueOf(value) : defaultValue;
+        return StringUtils.isNotBlank(value) ? Double.parseDouble(value) : defaultValue;
     }
 
     /**
@@ -124,7 +121,7 @@ public class PropertiesLoader {
      */
     public Boolean getBoolean(String key, boolean defaultValue) {
         String value = getValue(key);
-        return StringUtils.isNotBlank(value) ? Boolean.valueOf(value) : defaultValue;
+        return StringUtils.isNotBlank(value) ? Boolean.parseBoolean(value) : defaultValue;
     }
 
     /**
@@ -136,11 +133,11 @@ public class PropertiesLoader {
         for (String location : resourcesPaths) {
             InputStream is = null;
             try {
-                Resource resource = resourceLoader.getResource(location);
+                Resource resource = RESOURCE_LOADER.getResource(location);
                 is = resource.getInputStream();
                 props.load(is);
             } catch (IOException ex) {
-                logger.info("Could not load properties from path:" + location + ", " + ex.getMessage());
+                log.info("Could not load properties from path:" + location + ", " + ex.getMessage());
             } finally {
                 if (is != null) {
                     try {
