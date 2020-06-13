@@ -1,16 +1,12 @@
 package com.cloud.common.util.mybatis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
@@ -19,11 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +28,8 @@ import java.util.concurrent.TimeUnit;
  * @gitHub : https://github.com/lukw510903926
  * @description :
  */
-public class XmlMapperLoader implements DisposableBean, InitializingBean, ApplicationContextAware {
-
-    private Logger logger = LoggerFactory.getLogger(XmlMapperLoader.class);
+@Slf4j
+public class XmlMapperLoader implements DisposableBean, InitializingBean {
 
     private SqlSessionFactory sqlSessionFactory;
 
@@ -47,11 +38,9 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
      */
     private String basePackage = "classpath*:**/*Mapper.xml";
 
-    private HashMap<String, String> fileMapping = new HashMap<String, String>();
+    private final HashMap<String, String> fileMapping = new HashMap<>();
 
     private ScheduledExecutorService scheduledThreadPool;
-
-    private ApplicationContext applicationContext;
 
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;
@@ -61,10 +50,6 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     /**
      * @see InitializingBean 启动后设置属性值
@@ -78,7 +63,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
 
     class Task implements Runnable {
 
-        private Scanner scanner;
+        private final Scanner scanner;
 
         public Task(Scanner scanner) {
             this.scanner = scanner;
@@ -89,12 +74,12 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
             try {
                 List<Resource> resources = scanner.getChangedFiles();
                 if (resources.size() > 0) {
-                    logger.debug("**********Mapper.xml文件改变,重新加载**************");
+                    log.debug("**********Mapper.xml文件改变,重新加载**************");
                     scanner.reloadXML(resources);
-                    logger.debug("*****************加载完毕***********************");
+                    log.debug("*****************加载完毕***********************");
                 }
             } catch (Exception e) {
-                logger.error("mapper文件修改重新加载失败: {}", e);
+                log.error("mapper文件修改重新加载失败: ", e);
             }
         }
 
@@ -102,7 +87,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
 
     class Scanner {
 
-        private String[] basePackages;
+        private final String[] basePackages;
 
         public Scanner() {
             basePackages = StringUtils.tokenizeToStringArray(XmlMapperLoader.this.basePackage,
@@ -110,7 +95,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
             try {
                 scan();
             } catch (IOException e) {
-                logger.error("mapper文件扫描失败: {}", e);
+                log.error("mapper文件扫描失败: ", e);
             }
         }
 
@@ -204,29 +189,28 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
 
             String contentLength = String.valueOf(resource.contentLength());
             String lastModified = String.valueOf(resource.lastModified());
-            return new StringBuilder(contentLength).append(lastModified).toString();
+            return contentLength + lastModified;
         }
 
         public List<Resource> getChangedFiles() throws IOException {
-
-            List<Resource> list = new ArrayList<Resource>();
+            List<Resource> list = new ArrayList<>();
             for (String basePackage : basePackages) {
-                logger.debug("开始 刷新mybatis mapper.xml 文件************************");
+                log.debug("开始 刷新mybatis mapper.xml 文件************************");
                 Resource[] resources = getResource(basePackage);
                 if (resources != null) {
-                    for (int i = 0; i < resources.length; i++) {
-                        String name = resources[i].getFilename();
+                    for (Resource resource : resources) {
+                        String name = resource.getFilename();
                         String value = fileMapping.get(name);
-                        String multi_key = getValue(resources[i]);
+                        String multi_key = getValue(resource);
                         if (!multi_key.equals(value)) {
-                            list.add(resources[i]);
+                            list.add(resource);
                             fileMapping.put(name, multi_key);
-                            logger.debug("{} 文件修改************************", name);
+                            log.debug("{} 文件修改************************", name);
                         }
                     }
                 }
             }
-            logger.debug("mybatis mapper.xml 文件刷新结束************************");
+            log.debug("mybatis mapper.xml 文件刷新结束************************");
             return list;
         }
     }
@@ -236,7 +220,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
      * @see DisposableBean 销毁时执行
      */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
 
         if (scheduledThreadPool != null) {
             scheduledThreadPool.shutdownNow();
@@ -272,7 +256,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean, Applic
 
         protected static class Ambiguity {
 
-            private String subject;
+            private final String subject;
 
             public Ambiguity(String subject) {
                 this.subject = subject;
