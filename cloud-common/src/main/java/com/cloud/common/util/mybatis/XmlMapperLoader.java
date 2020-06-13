@@ -159,7 +159,7 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean {
             Field field = configuration.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             Map<?, ?> map = (Map<?, ?>) field.get(configuration);
-            StrictMap<Object> newMap = new StrictMap<Object>();
+            StrictMap<Object> newMap = new StrictMap<>();
             for (Object key : map.keySet()) {
                 try {
                     newMap.put((String) key, map.get(key));
@@ -216,7 +216,6 @@ public class XmlMapperLoader implements DisposableBean, InitializingBean {
     }
 
     /**
-     * @throws Exception
      * @see DisposableBean 销毁时执行
      */
     @Override
