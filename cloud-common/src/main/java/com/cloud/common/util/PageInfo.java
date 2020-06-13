@@ -3,7 +3,6 @@ package com.cloud.common.util;
 import com.github.pagehelper.Page;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -183,7 +182,7 @@ public class PageInfo<T> implements Serializable {
                 // 计算实际的endRow（最后一页的时候特殊）
                 this.endRow = this.startRow - 1 + this.size;
             }
-        } else if (list instanceof Collection) {
+        } else if (list != null) {
             this.pageNum = 1;
             this.pageSize = list.size();
 
@@ -194,7 +193,7 @@ public class PageInfo<T> implements Serializable {
             this.startRow = 0;
             this.endRow = list.size() > 0 ? list.size() - 1 : 0;
         }
-        if (list instanceof Collection) {
+        if (list != null) {
             this.navigatePages = navigatePages;
             // 计算导航页
             calcNavigatepageNums();
